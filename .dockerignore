@@ -1,0 +1,9 @@
+target
+.pgdata
+.env
+.env.*
+!.env.example
+.git
+web/node_modules
+web/dist
+*.log

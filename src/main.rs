@@ -109,7 +109,12 @@ async fn seed(state: &AppState) -> Result<()> {
         sqlx::query("UPDATE promoters SET payout_email = $1").bind(email).execute(db).await?;
     }
     let summary: String = sqlx::query_scalar("SELECT refresh_sample_data()").fetch_one(db).await?;
-    tracing::info!("{summary}");
+    // Visitors who have not been back for 30 days: forget their demo data.
+    let purged = sqlx::query("DELETE FROM demo_sessions WHERE last_seen_at < now() - interval '30 days'")
+        .execute(db)
+        .await?
+        .rows_affected();
+    tracing::info!(purged_sessions = purged, "{summary}");
     Ok(())
 }
 

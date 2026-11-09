@@ -1,0 +1,67 @@
+# Render Blueprint: web service (server + frontend + background jobs), a nightly cron job that
+# rebuilds the shared sample data around "today", and Postgres. Secrets are set in the dashboard.
+services:
+  - type: web
+    name: misfy-dropcard
+    runtime: docker
+    plan: 0.5c-512mb
+    region: singapore
+    healthCheckPath: /healthz
+    # Runs migrations and (re)builds sample data before each deploy goes live.
+    preDeployCommand: misfy-dropcard seed
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: misfy-dropcard-db
+          property: connectionString
+      - key: COOKIE_SECURE
+        value: "1"
+      - key: RUN_JOBS
+        value: "1"
+      - key: PAYPAL_BASE_URL
+        value: https://api-m.sandbox.paypal.com
+      - key: PAYPAL_CLIENT_ID
+        sync: false
+      - key: PAYPAL_CLIENT_SECRET
+        sync: false
+      - key: PAYPAL_WEBHOOK_ID
+        sync: false
+      - key: SANDBOX_VENUE_EMAIL
+        sync: false
+      - key: SANDBOX_ARTIST_EMAIL
+        sync: false
+      - key: SANDBOX_PROMOTER_EMAIL
+        sync: false
+      - key: ANTHROPIC_API_KEY
+        sync: false
+      - key: LLM_MODEL
+        value: claude-opus-5-5
+      - key: LLM_EFFORT
+        value: medium
+      - key: LLM_DAILY_TURN_CAP
+        value: "800"
+
+  - type: cron
+    name: misfy-dropcard-sample-refresh
+    runtime: docker
+    plan: 0.5c-512mb
+    region: singapore
+    schedule: "0 18 * * *" # 03:00 Seoul time
+    dockerCommand: misfy-dropcard seed
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: misfy-dropcard-db
+          property: connectionString
+      - key: SANDBOX_VENUE_EMAIL
+        sync: false
+      - key: SANDBOX_ARTIST_EMAIL
+        sync: false
+      - key: SANDBOX_PROMOTER_EMAIL
+        sync: false
+
+databases:
+  - name: misfy-dropcard-db
+    plan: 0.1c-256mb
+    region: singapore
+    postgresMajorVersion: "17"

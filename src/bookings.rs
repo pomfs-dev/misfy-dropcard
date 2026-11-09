@@ -183,7 +183,8 @@ pub async fn load(db: &PgPool, session: Uuid, id: Uuid) -> AppResult<Booking> {
     if let Some(at) = d.cancelled_at {
         timeline.push(TimelineEntry { at, label: "Cancelled".into() });
     }
-    timeline.sort_by_key(|t| t.at);
+    // Entries are already in lifecycle order. Do not sort by time: with a moved demo clock, show and
+    // settlement times are in the session's future while PayPal events carry real timestamps.
 
     Ok(Booking {
         summary,
