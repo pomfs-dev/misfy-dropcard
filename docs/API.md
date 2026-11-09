@@ -97,6 +97,8 @@ type Booking = BookingSummary & {
   venue_slug: string;
   artist: { slug: string; name: string } | null;
   ticket_price_cents: number | null;
+  tickets_sold: number;          // tickets with a confirmed PayPal capture
+  ticket_sales_cents: number;
   inquiry_text: string | null;
   approved_at: string | null;
   conversation_id: string | null;
@@ -116,6 +118,7 @@ type Booking = BookingSummary & {
 | ✅ | `POST /api/bookings/{id}/deposit-order` | header `Idempotency-Key: <uuid>` | `{"paypal_order_id": string, "amount_cents": number, "currency": "USD"}` (409 unless status is `approved`; 503 while PayPal is not configured) |
 | ✅ | `POST /api/shows/{id}/ticket-order` | `{"quantity": 1..6}`, header `Idempotency-Key: <uuid>` | same as above — tickets for a **confirmed (`paid`) show of this session**; one key per purchase |
 | ✅ | `POST /api/paypal/orders/{paypal_order_id}/capture` | | `{"status": "pending_webhook" \| "captured" \| "failed", "message": string \| null, "booking": Booking}` |
+| ✅ | `GET /api/orders/{paypal_order_id}` | | `{"paypal_order_id", "booking_id", "kind", "status", "confirmed_by", "quantity", "amount_cents", "captured_at"}` — one of this visitor's orders; poll it after a ticket capture |
 | ✅ | `POST /api/paypal/webhook` | (PayPal → server) | `200` |
 
 Ticket sales are what make the payout split visible: after a show with tickets sold, one Payouts batch pays the
@@ -147,7 +150,7 @@ The same visitor can switch to the venue owner role. Owner actions apply to book
 | ✅ | `GET /api/console/{slug}/inbox` | | `Booking[]` — holds waiting for approval first, then approved bookings waiting for the deposit |
 | ✅ | `POST /api/console/bookings/{id}/approve` | | `Booking` |
 | ✅ | `POST /api/console/bookings/{id}/decline` | | `Booking` |
-| ✅ | `PATCH /api/console/bookings/{id}` | `{"space_id"?, "starts_at"?, "ends_at"?}` | `Booking` — drag/resize on the scheduler (proposals and holds only; 409 on overlap) |
+| ✅ | `PATCH /api/console/bookings/{id}` | `{"space_id"?, "starts_at"?, "ends_at"?}` | `Booking` — drag/resize on the scheduler (proposals and holds only; 409 on overlap or when the space is too small for the headcount) |
 | ✅ | `GET /api/console/{slug}/payments` | | `Payments` |
 | ✅ | `GET /api/console/{slug}/payouts` | | `{"batches": Settlement[]}` |
 | ✅ | `POST /api/console/{slug}/settlement/run` | | `{"batches": Settlement[]}` — run due settlements now (uses the session clock) |

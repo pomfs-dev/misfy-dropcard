@@ -8,8 +8,8 @@ Built for the PayPal AI Hackathon 2026. A new, standalone service made for MiSFY
 data, keys or infrastructure with the existing MiSFY app, and it only ever talks to the **PayPal sandbox**.
 
 > **Status (2026-11-09, work in progress).** Server, database, PayPal integration (Orders v2, webhooks, Payouts),
-> AI concierge and settlement are implemented and tested locally (see [Testing](#testing)). In progress: the web
-> frontend, the Render deployment, and the end-to-end run against the real PayPal sandbox.
+> AI concierge, settlement and the web frontend are implemented and tested locally (see [Testing](#testing)).
+> In progress: the Render deployment and the end-to-end run against the real PayPal sandbox and Claude API.
 > Live demo URL: _coming soon_.
 
 ## What it does
@@ -103,8 +103,11 @@ cargo run                     # http://localhost:8080
 
 Without PayPal or Anthropic keys the app still runs; payment and concierge endpoints answer `503` with a clear message.
 
-**Bryntum:** the frontend uses the public trial package `@bryntum/schedulerpro-trial` from npm (installed by
-`npm install`, shows a trial watermark). No Bryntum files are committed to this repository.
+**Bryntum Scheduler Pro:** `web/package.json` installs Bryntum's public trial package from npm through the vendor's
+alias — `"@bryntum/schedulerpro": "npm:@bryntum/schedulerpro-trial@7.3.8"` — so imports use `@bryntum/schedulerpro` and a
+licensed build only changes that one line. It is under Bryntum's commercial trial license, shows a faint watermark and
+is time-limited per browser. Do not use `npm install --ignore-scripts` (its install script sets up the trial).
+No Bryntum files are committed to this repository; the build bundles the package at deploy time.
 
 ### PayPal sandbox setup
 

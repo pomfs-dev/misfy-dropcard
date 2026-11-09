@@ -97,6 +97,37 @@ pub async fn ticket_order(
     Ok(Json(payments::create_ticket_order(&st, sid, id, body.quantity.unwrap_or(1), key).await?))
 }
 
+#[derive(Debug, Serialize, sqlx::FromRow)]
+pub struct OrderStatus {
+    pub paypal_order_id: String,
+    pub booking_id: Uuid,
+    pub kind: String,
+    pub status: String,
+    pub confirmed_by: Option<String>,
+    pub quantity: i32,
+    pub amount_cents: i64,
+    pub captured_at: Option<chrono::DateTime<chrono::Utc>>,
+}
+
+/// GET /api/orders/{paypal_order_id} — one of this visitor's PayPal orders (poll after a ticket capture).
+pub async fn order_status(
+    State(st): State<AppState>,
+    Extension(DemoSession(sid)): Extension<DemoSession>,
+    Path(paypal_order_id): Path<String>,
+) -> AppResult<Json<OrderStatus>> {
+    let order = sqlx::query_as::<_, OrderStatus>(
+        "SELECT o.paypal_order_id, o.booking_id, o.kind, o.status, o.confirmed_by, o.quantity, o.amount_cents, o.captured_at
+           FROM orders o JOIN bookings b ON b.id = o.booking_id
+          WHERE o.paypal_order_id = $1 AND b.demo_session_id = $2",
+    )
+    .bind(&paypal_order_id)
+    .bind(sid)
+    .fetch_optional(&st.db)
+    .await?
+    .ok_or(AppError::NotFound)?;
+    Ok(Json(order))
+}
+
 #[derive(Debug, Serialize)]
 pub struct CaptureResponse {
     pub status: &'static str,

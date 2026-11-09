@@ -1,7 +1,11 @@
-use axum::extract::State;
-use axum::http::StatusCode;
+use axum::extract::{Request, State};
+use axum::http::header::CACHE_CONTROL;
+use axum::http::{HeaderValue, StatusCode};
+use axum::middleware::Next;
+use axum::response::Response;
 use axum::routing::{get, patch, post};
 use axum::{middleware, Router};
+use tower_http::compression::CompressionLayer;
 use tower_http::services::{ServeDir, ServeFile};
 use tower_http::trace::TraceLayer;
 
@@ -35,6 +39,7 @@ pub fn router(state: AppState) -> Router {
         .route("/bookings/{id}/cancel", post(bookings::cancel))
         .route("/bookings/{id}/deposit-order", post(bookings::deposit_order))
         .route("/shows/{id}/ticket-order", post(bookings::ticket_order))
+        .route("/orders/{paypal_order_id}", get(bookings::order_status))
         .route("/paypal/orders/{paypal_order_id}/capture", post(bookings::capture))
         .route("/console/bookings/{id}", patch(console::patch))
         .route("/console/bookings/{id}/approve", post(console::approve))
@@ -54,10 +59,23 @@ pub fn router(state: AppState) -> Router {
     Router::new()
         .route("/healthz", get(health))
         .nest("/api", api)
-        // The frontend is a single-page app: unknown paths get index.html.
-        .fallback_service(ServeDir::new(web_dir).not_found_service(ServeFile::new(index)))
+        // The frontend is a single-page app: unknown paths get index.html (with 200, so deep links work).
+        .fallback_service(ServeDir::new(web_dir).fallback(ServeFile::new(index)))
+        .layer(middleware::from_fn(cache_hashed_assets))
+        .layer(CompressionLayer::new())
         .layer(TraceLayer::new_for_http())
         .with_state(state)
+}
+
+/// Vite puts a content hash in every file name under /assets/, so those can be cached forever.
+async fn cache_hashed_assets(req: Request, next: Next) -> Response {
+    let hashed = req.uri().path().starts_with("/assets/");
+    let mut res = next.run(req).await;
+    if hashed && res.status().is_success() {
+        res.headers_mut()
+            .insert(CACHE_CONTROL, HeaderValue::from_static("public, max-age=31536000, immutable"));
+    }
+    res
 }
 
 async fn health(State(st): State<AppState>) -> (StatusCode, &'static str) {

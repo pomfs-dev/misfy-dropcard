@@ -9,7 +9,7 @@ publish = false
 [dependencies]
 axum = { version = "0.8", features = ["macros"] }
 tokio = { version = "1", features = ["full"] }
-tower-http = { version = "0.6", features = ["fs", "trace", "cors"] }
+tower-http = { version = "0.6", features = ["fs", "trace", "cors", "compression-gzip", "compression-br"] }
 serde = { version = "1", features = ["derive"] }
 serde_json = { version = "1", features = ["raw_value"] }
 sqlx = { version = "0.8", default-features = false, features = ["runtime-tokio", "tls-rustls", "postgres", "macros", "migrate", "chrono", "uuid", "json"] }

@@ -71,6 +71,9 @@ pub struct Booking {
     pub venue_slug: String,
     pub artist: Option<ArtistRef>,
     pub ticket_price_cents: Option<i64>,
+    /// Tickets with a confirmed PayPal capture, and their gross.
+    pub tickets_sold: i64,
+    pub ticket_sales_cents: i64,
     pub inquiry_text: Option<String>,
     pub approved_at: Option<DateTime<Utc>>,
     pub conversation_id: Option<Uuid>,
@@ -145,6 +148,13 @@ pub async fn load(db: &PgPool, session: Uuid, id: Uuid) -> AppResult<Booking> {
     .await?;
 
     let settlement = payouts::settlement_for_booking(db, id).await?;
+    let (tickets_sold, ticket_sales_cents): (i64, i64) = sqlx::query_as(
+        "SELECT COALESCE(sum(quantity), 0)::bigint, COALESCE(sum(amount_cents), 0)::bigint
+           FROM orders WHERE booking_id = $1 AND kind = 'ticket' AND status = 'captured'",
+    )
+    .bind(id)
+    .fetch_one(db)
+    .await?;
 
     let mut timeline = vec![TimelineEntry {
         at: d.created_at,
@@ -194,6 +204,8 @@ pub async fn load(db: &PgPool, session: Uuid, id: Uuid) -> AppResult<Booking> {
             _ => None,
         },
         ticket_price_cents: d.ticket_price_cents,
+        tickets_sold,
+        ticket_sales_cents,
         inquiry_text: d.inquiry_text,
         approved_at: d.approved_at,
         conversation_id: d.conversation_id,
@@ -375,11 +387,21 @@ struct OwnRow {
     ends_at: DateTime<Utc>,
     venue_id: Uuid,
     conversation_id: Option<Uuid>,
+    headcount: Option<i32>,
+}
+
+fn too_small(space_name: &str, capacity_max: i32, headcount: Option<i32>) -> Option<AppError> {
+    match headcount {
+        Some(h) if h > capacity_max => Some(AppError::Conflict(format!(
+            "{space_name} holds at most {capacity_max} guests; this booking is for {h}"
+        ))),
+        _ => None,
+    }
 }
 
 async fn lock_own(tx: &mut Transaction<'_, Postgres>, session: Uuid, id: Uuid) -> AppResult<OwnRow> {
     sqlx::query_as::<_, OwnRow>(
-        "SELECT status, space_id, starts_at, ends_at, venue_id, conversation_id
+        "SELECT status, space_id, starts_at, ends_at, venue_id, conversation_id, headcount
            FROM bookings WHERE id = $1 AND demo_session_id = $2 FOR UPDATE",
     )
     .bind(id)
@@ -407,6 +429,9 @@ pub async fn propose(db: &PgPool, session: Uuid, p: NewProposal<'_>) -> AppResul
     let now = clock::session_now(db, session).await?;
     if p.starts_at <= now {
         return Err(AppError::BadRequest("that time is in the past".into()));
+    }
+    if let Some(e) = too_small(&p.space.name, p.space.capacity_max, p.headcount) {
+        return Err(e);
     }
     let ends_at = p.starts_at + Duration::hours(p.hours.clamp(1, 12) as i64);
     let mut tx = db.begin().await?;
@@ -559,12 +584,17 @@ pub async fn reschedule(
     if starts <= now {
         return Err(AppError::BadRequest("that time is in the past".into()));
     }
-    let rate: Option<i64> = sqlx::query_scalar("SELECT day_rate_cents FROM spaces WHERE id = $1 AND venue_id = $2")
-        .bind(space_id)
-        .bind(b.venue_id)
-        .fetch_optional(&mut *tx)
-        .await?;
-    let rate = rate.ok_or_else(|| AppError::BadRequest("unknown space for this venue".into()))?;
+    let space: Option<(i64, i32, String)> =
+        sqlx::query_as("SELECT day_rate_cents, capacity_max, name FROM spaces WHERE id = $1 AND venue_id = $2")
+            .bind(space_id)
+            .bind(b.venue_id)
+            .fetch_optional(&mut *tx)
+            .await?;
+    let (rate, capacity_max, space_name) =
+        space.ok_or_else(|| AppError::BadRequest("unknown space for this venue".into()))?;
+    if let Some(e) = too_small(&space_name, capacity_max, b.headcount) {
+        return Err(e);
+    }
     lock_space(&mut tx, space_id).await?;
     if slot_taken(&mut tx, session, space_id, starts, ends, Some(id)).await? {
         return Err(AppError::Conflict("that time overlaps another booking".into()));
