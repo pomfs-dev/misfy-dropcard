@@ -49,8 +49,11 @@ impl std::fmt::Debug for PayPalConfig {
 
 #[derive(Clone)]
 pub struct LlmConfig {
+    pub base_url: String,
     pub api_key: String,
     pub model: String,
+    /// `output_config.effort`: how much the model thinks (low | medium | high | xhigh | max).
+    pub effort: String,
     /// Safety cap on agent turns per day across all visitors (abuse protection, not a judge limit).
     pub daily_turn_cap: i32,
 }
@@ -60,6 +63,7 @@ impl std::fmt::Debug for LlmConfig {
         f.debug_struct("LlmConfig")
             .field("api_key", &"<redacted>")
             .field("model", &self.model)
+            .field("effort", &self.effort)
             .field("daily_turn_cap", &self.daily_turn_cap)
             .finish()
     }
@@ -98,10 +102,18 @@ impl Config {
         }
 
         let llm = opt("ANTHROPIC_API_KEY").map(|api_key| LlmConfig {
+            base_url: opt("ANTHROPIC_BASE_URL").unwrap_or_else(|| "https://api.anthropic.com".to_string()),
             api_key,
-            model: opt("LLM_MODEL").unwrap_or_else(|| "claude-sonnet-5-5".to_string()),
-            daily_turn_cap: opt("LLM_DAILY_TURN_CAP").and_then(|v| v.parse().ok()).unwrap_or(3000),
+            model: opt("LLM_MODEL").unwrap_or_else(|| "claude-opus-5-5".to_string()),
+            effort: opt("LLM_EFFORT").unwrap_or_else(|| "medium".to_string()),
+            daily_turn_cap: opt("LLM_DAILY_TURN_CAP").and_then(|v| v.parse().ok()).unwrap_or(800),
         });
+        if let Some(l) = &llm {
+            anyhow::ensure!(
+                ["low", "medium", "high", "xhigh", "max"].contains(&l.effort.as_str()),
+                "LLM_EFFORT must be one of low, medium, high, xhigh, max"
+            );
+        }
 
         Ok(Self {
             database_url,

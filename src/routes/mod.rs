@@ -8,6 +8,7 @@ use tower_http::trace::TraceLayer;
 use crate::error::AppError;
 use crate::{session, webhooks, AppState};
 
+pub mod agent;
 pub mod bookings;
 pub mod config;
 pub mod console;
@@ -27,6 +28,8 @@ pub fn router(state: AppState) -> Router {
         .route("/venues", get(venues::list))
         .route("/venues/{slug}", get(venues::card))
         .route("/venues/{slug}/schedule", get(venues::schedule))
+        .route("/agent/chat", post(agent::chat))
+        .route("/agent/conversations/{id}", get(agent::conversation))
         .route("/bookings/{id}", get(bookings::get_booking))
         .route("/bookings/{id}/request", post(bookings::request))
         .route("/bookings/{id}/cancel", post(bookings::cancel))

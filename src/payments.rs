@@ -51,7 +51,7 @@ pub async fn create_deposit_order(
 ) -> AppResult<DepositOrderResponse> {
     let mut tx = st.db.begin().await?;
     let booking: Option<(String, i64, String, String)> = sqlx::query_as(
-        "SELECT status, deposit_cents, currency, title FROM bookings
+        "SELECT status, deposit_cents, 'USD'::text AS currency, title FROM bookings
           WHERE id = $1 AND demo_session_id = $2 FOR UPDATE",
     )
     .bind(booking_id)

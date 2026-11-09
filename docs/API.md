@@ -59,8 +59,8 @@ hold = yellow `#EAB308` striped, ai_proposed = dashed outline.
 
 | | Endpoint | Body | Response |
 |---|---|---|---|
-| 🛠 | `POST /api/agent/chat` | `{"venue_slug": string, "conversation_id"?: string, "message": string}` | `ChatTurn` |
-| 🛠 | `GET /api/agent/conversations/{id}` | | `{"conversation_id": string, "messages": ChatMessage[], "booking": Booking \| null}` |
+| ✅ | `POST /api/agent/chat` | `{"venue_slug": string, "conversation_id"?: string, "message": string}` | `ChatTurn` (503 while the LLM key is not configured; a turn can take 10–40 s) |
+| ✅ | `GET /api/agent/conversations/{id}` | | `{"conversation_id": string, "messages": ChatMessage[], "proposals": BookingSummary[], "booking": Booking \| null}` |
 
 ```ts
 type ChatMessage = { role: "user" | "assistant"; text: string; at: string };
@@ -75,9 +75,11 @@ type ChatTurn = {
 };
 ```
 
-The agent's tools: `check_availability`, `propose_slots`, `request_booking` (turns a proposal into a hold with an
-inquiry), `get_booking_status`, `create_deposit_order` (**only allowed after the venue approved**; otherwise the
-call is recorded as `blocked`).
+The agent's tools: `check_availability`, `find_artists`, `propose_slots`, `request_booking` (turns a proposal into a
+hold with an inquiry), `get_booking_status`, `create_deposit_order` (**only allowed after the venue approved**;
+otherwise the call is recorded as `blocked`). Start a new conversation by omitting `conversation_id`; keep the
+returned id for the next messages. Disable the input while a turn is running (a second message in the same
+conversation at the same time gets a 409).
 
 ## Bookings
 

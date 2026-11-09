@@ -15,6 +15,7 @@ use sqlx::postgres::PgPoolOptions;
 use sqlx::PgPool;
 use tracing_subscriber::EnvFilter;
 
+mod agent;
 mod bookings;
 mod clock;
 mod config;
@@ -37,6 +38,7 @@ pub struct AppState {
     pub db: PgPool,
     pub cfg: Arc<Config>,
     pub paypal: Option<Arc<PayPal>>,
+    pub llm: Option<Arc<agent::llm::Llm>>,
 }
 
 #[tokio::main]
@@ -59,13 +61,17 @@ async fn main() -> Result<()> {
     sqlx::migrate!("./migrations").run(&db).await.context("running migrations")?;
 
     let paypal = cfg.paypal.clone().map(|p| Arc::new(PayPal::new(p)));
+    let llm = cfg
+        .llm
+        .as_ref()
+        .map(|l| Arc::new(agent::llm::Llm::new(&l.base_url, l.api_key.clone(), l.model.clone(), l.effort.clone())));
     tracing::info!(
         paypal = paypal.is_some(),
         webhook_verification = paypal.as_ref().map(|p| p.webhook_configured()).unwrap_or(false),
-        llm = cfg.llm.as_ref().map(|l| l.model.as_str()).unwrap_or("off"),
+        llm = cfg.llm.as_ref().map(|l| format!("{} (effort {})", l.model, l.effort)).unwrap_or_else(|| "off".into()),
         "configuration"
     );
-    let state = AppState { db, cfg: Arc::new(cfg), paypal };
+    let state = AppState { db, cfg: Arc::new(cfg), paypal, llm };
 
     let command = std::env::args().nth(1).unwrap_or_else(|| "serve".to_string());
     match command.as_str() {
