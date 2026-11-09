@@ -11,6 +11,8 @@ data, keys or infrastructure with the existing MiSFY app, and it only ever talks
 > AI concierge, settlement and the web frontend are implemented and tested locally (see [Testing](#testing)).
 > In progress: the Render deployment and the end-to-end run against the real PayPal sandbox and Claude API.
 > Live demo URL: _coming soon_.
+>
+> **Judges:** the sandbox buyer login for the live demo is in the Devpost testing instructions.
 
 ## What it does
 
@@ -118,6 +120,8 @@ No Bryntum files are committed to this repository; the build bundles the package
    reconciliation with the PayPal API (within ~15 s instead of instantly).
 3. Optional: set `SANDBOX_VENUE_EMAIL`, `SANDBOX_ARTIST_EMAIL`, `SANDBOX_PROMOTER_EMAIL` to sandbox personal accounts
    so payouts land in real sandbox wallets, then run `cargo run -- seed` again.
+4. To pay in the PayPal checkout window, log in with one of your own sandbox **personal** accounts
+   (developer.paypal.com → Testing Tools → Sandbox Accounts).
 
 ## Testing
 
