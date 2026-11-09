@@ -112,9 +112,10 @@ No Bryntum files are committed to this repository; the build bundles the package
 ### PayPal sandbox setup
 
 1. developer.paypal.com → Apps & Credentials → Sandbox → create an app; put its client id and secret in `.env`.
-2. Add a webhook to the app for `https://<your-host>/api/paypal/webhook` with the events
-   `CHECKOUT.ORDER.APPROVED`, `PAYMENT.CAPTURE.COMPLETED`, `PAYMENT.CAPTURE.DENIED`, `PAYMENT.CAPTURE.REFUNDED`,
-   `PAYMENT.PAYOUTS-ITEM.*` and `PAYMENT.PAYOUTSBATCH.*`; put the webhook id in `PAYPAL_WEBHOOK_ID`.
+2. Register the webhook (PayPal needs a public https URL — your deployment, or a tunnel to localhost):
+   `cargo run -- paypal-webhook https://<your-host>` creates it (or finds the existing one) and prints
+   `PAYPAL_WEBHOOK_ID=...` for `.env`. Without a webhook id the server still confirms payments through
+   reconciliation with the PayPal API (within ~15 s instead of instantly).
 3. Optional: set `SANDBOX_VENUE_EMAIL`, `SANDBOX_ARTIST_EMAIL`, `SANDBOX_PROMOTER_EMAIL` to sandbox personal accounts
    so payouts land in real sandbox wallets, then run `cargo run -- seed` again.
 

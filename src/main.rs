@@ -5,6 +5,7 @@
 //!   misfy-dropcard serve   run the web server and background jobs (default)
 //!   misfy-dropcard seed    create sample venues/artists and rebuild sample bookings around today
 //!   misfy-dropcard cycle   run one settlement/payout/reconciliation cycle and exit (for cron)
+//!   misfy-dropcard paypal-webhook https://<host>   create (or find) the PayPal sandbox webhook, print its id
 
 use std::net::SocketAddr;
 use std::sync::Arc;
@@ -78,7 +79,19 @@ async fn main() -> Result<()> {
         "serve" => serve(state).await,
         "seed" => seed(&state).await,
         "cycle" => jobs::run_cycle(&state, None).await,
-        other => anyhow::bail!("unknown command `{other}` (expected: serve | seed | cycle)"),
+        "paypal-webhook" => {
+            let base = std::env::args()
+                .nth(2)
+                .context("usage: misfy-dropcard paypal-webhook https://<public-host>")?;
+            anyhow::ensure!(base.starts_with("https://"), "PayPal webhooks need an https:// URL");
+            let pp = state.paypal.as_deref().context("PAYPAL_CLIENT_ID / PAYPAL_CLIENT_SECRET are not set")?;
+            let url = format!("{}/api/paypal/webhook", base.trim_end_matches('/'));
+            let (id, created) = pp.ensure_webhook(&url).await?;
+            println!("{} webhook for {url}", if created { "Created" } else { "Found existing" });
+            println!("PAYPAL_WEBHOOK_ID={id}");
+            Ok(())
+        }
+        other => anyhow::bail!("unknown command `{other}` (expected: serve | seed | cycle | paypal-webhook <url>)"),
     }
 }
 

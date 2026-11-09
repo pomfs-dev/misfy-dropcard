@@ -13,7 +13,7 @@ import uuid
 
 PORT = int(sys.argv[1])
 APP = sys.argv[2].rstrip("/")
-ORDERS, BY_REQ, PAYOUTS, SENT_EVENTS = {}, {}, {}, {}
+ORDERS, BY_REQ, PAYOUTS, SENT_EVENTS, WEBHOOKS = {}, {}, {}, {}, []
 LOCK = threading.Lock()
 STATS = {"verify_success": 0, "verify_failure": 0, "create_order": 0, "capture": 0, "payouts": 0}
 
@@ -78,6 +78,8 @@ class Handler(http.server.BaseHTTPRequestHandler):
             return self.reply(200, PAYOUTS[bid]) if bid in PAYOUTS else self.reply(404, {"name": "INVALID_RESOURCE_ID"})
         if path == "/stats":
             return self.reply(200, STATS)
+        if path == "/v1/notifications/webhooks":
+            return self.reply(200, {"webhooks": WEBHOOKS})
         self.reply(404, {"name": "NOT_FOUND"})
 
     def do_POST(self):
@@ -134,6 +136,11 @@ class Handler(http.server.BaseHTTPRequestHandler):
                 and b.get("webhook_id") == "WH-ID-MOCK"
             STATS["verify_success" if ok else "verify_failure"] += 1
             return self.reply(200, {"verification_status": "SUCCESS" if ok else "FAILURE"})
+        if path == "/v1/notifications/webhooks":
+            b = json.loads(raw)
+            hook = {"id": "WH-" + uuid.uuid4().hex[:17].upper(), "url": b["url"], "event_types": b["event_types"]}
+            WEBHOOKS.append(hook)
+            return self.reply(201, hook)
         if path == "/v1/payments/payouts":
             b = json.loads(raw)
             sb = b["sender_batch_header"]["sender_batch_id"]

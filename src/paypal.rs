@@ -327,6 +327,26 @@ impl PayPal {
         Ok(str_at(&v, "/verification_status").as_deref() == Some("SUCCESS"))
     }
 
+    /// Makes sure the app has a webhook pointing at `url` (all event types; the server ignores the ones it
+    /// does not use). Returns the webhook id for `PAYPAL_WEBHOOK_ID`, and whether it was created now.
+    pub async fn ensure_webhook(&self, url: &str) -> PResult<(String, bool)> {
+        let list = self.send(Method::GET, "/v1/notifications/webhooks", None, None, false).await?;
+        if let Some(existing) = list
+            .get("webhooks")
+            .and_then(|w| w.as_array())
+            .and_then(|hooks| hooks.iter().find(|h| h.get("url").and_then(|u| u.as_str()) == Some(url)))
+        {
+            let id = str_at(existing, "/id").ok_or_else(|| PayPalError::Unexpected("webhook without id".into()))?;
+            return Ok((id, false));
+        }
+        let body = json!({ "url": url, "event_types": [{ "name": "*" }] });
+        let created = self
+            .send(Method::POST, "/v1/notifications/webhooks", None, Some(body.to_string()), false)
+            .await?;
+        let id = str_at(&created, "/id").ok_or_else(|| PayPalError::Unexpected("webhook without id".into()))?;
+        Ok((id, true))
+    }
+
     // ---------------------------------------------------------------- Payouts
 
     /// Sends one payout batch. `sender_batch_id` is unique per batch and doubles as the request id,
