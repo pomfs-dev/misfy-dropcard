@@ -7,6 +7,7 @@
 //!   misfy-dropcard cycle   run one settlement/payout/reconciliation cycle and exit (for cron)
 //!   misfy-dropcard paypal-webhook https://<host>   create (or find) the PayPal sandbox webhook, print its id
 
+use std::io::IsTerminal;
 use std::net::SocketAddr;
 use std::sync::Arc;
 use std::time::Duration;
@@ -50,6 +51,8 @@ async fn main() -> Result<()> {
             EnvFilter::try_from_default_env()
                 .unwrap_or_else(|_| EnvFilter::new("info,sqlx=warn,tower_http=info")),
         )
+        // Colors only in a terminal; plain text for Docker / Render log collectors.
+        .with_ansi(std::io::stdout().is_terminal())
         .init();
 
     let cfg = Config::from_env()?;
