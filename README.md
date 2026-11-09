@@ -118,13 +118,18 @@ Without PayPal or Anthropic keys the app still runs; payment and concierge endpo
 ## Testing
 
 ```sh
-cargo test        # settlement arithmetic, money parsing, webhook byte-for-byte forwarding, payout timing, ...
+cargo test          # settlement arithmetic, money parsing, webhook byte-for-byte forwarding, payout timing, ...
+tests/e2e/run.sh    # the whole flow against local stand-ins for the PayPal sandbox and the Claude API
 ```
 
-The full money flow was also run end to end against scripted stand-ins for the PayPal sandbox and the Claude API:
-repeated deposit clicks produce one PayPal order, a booking is confirmed only after the verified webhook, a
-redelivered webhook is ignored, a forged signature is rejected, one payout batch pays all three parties, and the
-ledger balances to the cent.
+`tests/e2e/run.sh` starts the server with [`mock_paypal.py`](tests/e2e/mock_paypal.py) and
+[`mock_claude.py`](tests/e2e/mock_claude.py) (no keys, nothing leaves the machine) and runs
+[`scenario.py`](tests/e2e/scenario.py), which checks 18 things, among them: the agent proposes slots with its tools;
+the server blocks the payment tool before approval; a double click creates one PayPal order; capture alone does not
+confirm a booking — the verified webhook does; a redelivered webhook is ignored and a forged one rejected; one payout
+batch pays venue, artist and promoter, and settling again never pays twice; payouts + fees equal gross to the cent;
+every request to the Claude API keeps an identical, cacheable prefix and an append-only history.
+The stand-ins are for tests only — the hosted demo talks to the real PayPal sandbox and the real Claude API.
 
 ## API
 
