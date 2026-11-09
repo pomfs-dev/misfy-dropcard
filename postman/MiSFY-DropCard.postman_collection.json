@@ -1,0 +1,884 @@
+{
+  "info": {
+    "name": "MiSFY DropCard — PayPal + AI booking flow",
+    "_postman_id": "6f0f3c1e-5b7a-4c1e-9d1a-dc0000000001",
+    "description": "Reproduce the full flow against a running MiSFY DropCard server: AI concierge → venue approval → PayPal Orders v2 deposit (confirmed by webhook) → tickets → demo clock → PayPal Payouts settlement → ledger-based dashboard.\n\nSet `baseUrl` to the hosted demo or to http://localhost:8080. Postman keeps the `dc_sid` cookie, which is your demo session. Run the folders in order. One step needs a browser: approving the PayPal payment as the sandbox buyer (see '5.2').",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:8080"
+    },
+    {
+      "key": "venueSlug",
+      "value": "blue-lantern"
+    },
+    {
+      "key": "conversationId",
+      "value": ""
+    },
+    {
+      "key": "bookingId",
+      "value": ""
+    },
+    {
+      "key": "paypalOrderId",
+      "value": ""
+    },
+    {
+      "key": "ticketOrderId",
+      "value": ""
+    },
+    {
+      "key": "depositKey",
+      "value": ""
+    },
+    {
+      "key": "ticketKey",
+      "value": ""
+    }
+  ],
+  "item": [
+    {
+      "name": "1. Demo session",
+      "item": [
+        {
+          "name": "1.1 Get my demo session",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/session",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "session"
+              ]
+            },
+            "description": "Creates the demo session cookie on first call and returns the session's 'now' (real time + demo clock offset)."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('status 2xx', () => pm.expect(pm.response.code).to.be.within(200, 299));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "1.2 Reset my demo",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/demo/reset",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "demo",
+                "reset"
+              ]
+            },
+            "description": "Deletes this session's bookings and conversations and resets the demo clock. Shared sample data is untouched."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('status 2xx', () => pm.expect(pm.response.code).to.be.within(200, 299));",
+                  "pm.collectionVariables.set('conversationId', ''); pm.collectionVariables.set('bookingId', ''); pm.collectionVariables.set('depositKey', ''); pm.collectionVariables.set('ticketKey', '');"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "2. Venue",
+      "item": [
+        {
+          "name": "2.1 Venue card",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/venues/{{venueSlug}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "venues",
+                "{{venueSlug}}"
+              ]
+            },
+            "description": "Public venue card: venue, spaces (capacity range, day rate), upcoming shows."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('status 2xx', () => pm.expect(pm.response.code).to.be.within(200, 299));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "2.2 Schedule (spaces × bookings)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/venues/{{venueSlug}}/schedule",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "venues",
+                "{{venueSlug}}",
+                "schedule"
+              ]
+            },
+            "description": "Rows = spaces, bars = bookings visible to this session (shared samples + your own). Other people's holds show as 'On hold'."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('status 2xx', () => pm.expect(pm.response.code).to.be.within(200, 299));"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "3. AI concierge (Claude)",
+      "item": [
+        {
+          "name": "3.1 Ask for dates",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/agent/chat",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "agent",
+                "chat"
+              ]
+            },
+            "description": "Claude checks availability with tools and proposes up to 3 slots (status ai_proposed). Stores the conversation id and the first proposal as bookingId.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"venue_slug\": \"{{venueSlug}}\",\n  \"message\": \"A Friday night in the next few weeks for about 300 people \\u2014 synthwave, with Hollow Arcade if possible.\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('status 2xx', () => pm.expect(pm.response.code).to.be.within(200, 299));",
+                  "const d = pm.response.json();",
+                  "pm.collectionVariables.set('conversationId', d.conversation_id);",
+                  "if (d.proposals && d.proposals.length) pm.collectionVariables.set('bookingId', d.proposals[0].id);",
+                  "pm.test('agent used tools', () => pm.expect(d.tool_calls.length).to.be.above(0));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "3.2 Pick the first slot",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/agent/chat",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "agent",
+                "chat"
+              ]
+            },
+            "description": "Asks the agent to send the request for the first proposal (request_booking → hold).",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"venue_slug\": \"{{venueSlug}}\",\n  \"conversation_id\": \"{{conversationId}}\",\n  \"message\": \"Book the first option please. We need a DJ booth.\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('status 2xx', () => pm.expect(pm.response.code).to.be.within(200, 299));",
+                  "const d = pm.response.json();",
+                  "if (d.booking) pm.collectionVariables.set('bookingId', d.booking.id);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "3.3 Try to pay before approval (blocked)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/agent/chat",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "agent",
+                "chat"
+              ]
+            },
+            "description": "The agent's create_deposit_order tool is refused by the server until the venue approves; the refusal shows up as a 'blocked' tool call.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"venue_slug\": \"{{venueSlug}}\",\n  \"conversation_id\": \"{{conversationId}}\",\n  \"message\": \"Can I pay the deposit now?\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('status 2xx', () => pm.expect(pm.response.code).to.be.within(200, 299));",
+                  "const d = pm.response.json();",
+                  "pm.test('payment tool blocked before approval', () => pm.expect(d.tool_calls.map(t => t.status)).to.include('blocked'));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "3.3b (no LLM key) Request the proposal directly",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/bookings/{{bookingId}}/request",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "bookings",
+                "{{bookingId}}",
+                "request"
+              ]
+            },
+            "description": "Use this instead of 3.1–3.3 when the server has no LLM key: same as the agent's request_booking (proposal → hold). If the agent already sent the request, this answers 409, which is fine.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"inquiry_text\": \"Synthwave night, about 300 guests.\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('requested (or already requested by the agent)', () => pm.expect([200, 409]).to.include(pm.response.code));"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "4. Venue owner",
+      "item": [
+        {
+          "name": "4.1 Inbox",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/console/{{venueSlug}}/inbox",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "console",
+                "{{venueSlug}}",
+                "inbox"
+              ]
+            },
+            "description": "Holds waiting for approval, then approved bookings waiting for the deposit."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('status 2xx', () => pm.expect(pm.response.code).to.be.within(200, 299));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "4.2 Approve the booking",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/console/bookings/{{bookingId}}/approve",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "console",
+                "bookings",
+                "{{bookingId}}",
+                "approve"
+              ]
+            },
+            "description": "hold → approved. Payment tools unlock."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('status 2xx', () => pm.expect(pm.response.code).to.be.within(200, 299));",
+                  "pm.test('approved', () => pm.expect(pm.response.json().status).to.eql('approved'));"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "5. PayPal deposit (Orders v2 + webhook)",
+      "item": [
+        {
+          "name": "5.1 Create the deposit order",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Idempotency-Key",
+                "value": "{{depositKey}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/bookings/{{bookingId}}/deposit-order",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "bookings",
+                "{{bookingId}}",
+                "deposit-order"
+              ]
+            },
+            "description": "Creates the PayPal order (30% deposit). The Idempotency-Key is reused on purpose: sending this again returns the same PayPal order."
+          },
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "if (!pm.collectionVariables.get('depositKey')) pm.collectionVariables.set('depositKey', pm.variables.replaceIn('{{$guid}}'));"
+                ]
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('status 2xx', () => pm.expect(pm.response.code).to.be.within(200, 299));",
+                  "const d = pm.response.json();",
+                  "pm.collectionVariables.set('paypalOrderId', d.paypal_order_id);",
+                  "console.log('Approve as the sandbox buyer: https://www.sandbox.paypal.com/checkoutnow?token=' + d.paypal_order_id);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "5.2 (browser) Approve as the sandbox buyer",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "https://www.sandbox.paypal.com/checkoutnow?token={{paypalOrderId}}",
+              "protocol": "https",
+              "host": [
+                "www",
+                "sandbox",
+                "paypal",
+                "com"
+              ],
+              "path": [
+                "checkoutnow"
+              ],
+              "query": [
+                {
+                  "key": "token",
+                  "value": "{{paypalOrderId}}"
+                }
+              ]
+            },
+            "description": "Open this URL in a browser and log in with the PayPal sandbox buyer account from the README/testing instructions, then approve. (In the web app, the PayPal button does this step.)"
+          }
+        },
+        {
+          "name": "5.3 Capture",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/paypal/orders/{{paypalOrderId}}/capture",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "paypal",
+                "orders",
+                "{{paypalOrderId}}",
+                "capture"
+              ]
+            },
+            "description": "Asks PayPal to capture. Returns 'pending_webhook': the booking is confirmed only when the verified PAYMENT.CAPTURE.COMPLETED webhook arrives."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('status 2xx', () => pm.expect(pm.response.code).to.be.within(200, 299));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "5.4 Booking status (poll until paid)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/bookings/{{bookingId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "bookings",
+                "{{bookingId}}"
+              ]
+            },
+            "description": "Repeat until status is 'paid'. deposit_order.confirmed_by tells whether the webhook or the reconciliation job confirmed it."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('status 2xx', () => pm.expect(pm.response.code).to.be.within(200, 299));",
+                  "const d = pm.response.json(); console.log(d.status, d.deposit_order && d.deposit_order.confirmed_by);"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "6. Tickets (Orders v2)",
+      "item": [
+        {
+          "name": "6.1 Create a ticket order (2 tickets)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Idempotency-Key",
+                "value": "{{ticketKey}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/shows/{{bookingId}}/ticket-order",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "shows",
+                "{{bookingId}}",
+                "ticket-order"
+              ]
+            },
+            "description": "Tickets for the confirmed show. One Idempotency-Key per purchase.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"quantity\": 2\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "if (!pm.collectionVariables.get('ticketKey')) pm.collectionVariables.set('ticketKey', pm.variables.replaceIn('{{$guid}}'));"
+                ]
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('status 2xx', () => pm.expect(pm.response.code).to.be.within(200, 299));",
+                  "const d = pm.response.json(); pm.collectionVariables.set('ticketOrderId', d.paypal_order_id); console.log('Approve: https://www.sandbox.paypal.com/checkoutnow?token=' + d.paypal_order_id);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "6.2 Capture the ticket order (after approving in the browser)",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/paypal/orders/{{ticketOrderId}}/capture",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "paypal",
+                "orders",
+                "{{ticketOrderId}}",
+                "capture"
+              ]
+            },
+            "description": "Same capture flow as the deposit."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('status 2xx', () => pm.expect(pm.response.code).to.be.within(200, 299));"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "7. Settlement (Payouts)",
+      "item": [
+        {
+          "name": "7.1 Move the demo clock one week ahead",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/demo/clock/advance",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "demo",
+                "clock",
+                "advance"
+              ]
+            },
+            "description": "Only this session's 'now' moves. The show ends, and 09:00 venue time on the next day (payout time) passes.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"hours\": 168\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('status 2xx', () => pm.expect(pm.response.code).to.be.within(200, 299));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "7.2 Run settlement now",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/console/{{venueSlug}}/settlement/run",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "console",
+                "{{venueSlug}}",
+                "settlement",
+                "run"
+              ]
+            },
+            "description": "Plans the settlement from the ledger and sends one PayPal Payouts batch (venue, artist, promoter). Running it again never pays twice."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('status 2xx', () => pm.expect(pm.response.code).to.be.within(200, 299));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "7.3 Payouts",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/console/{{venueSlug}}/payouts",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "console",
+                "{{venueSlug}}",
+                "payouts"
+              ]
+            },
+            "description": "Batch and item status (planned → pending → succeeded), from payout webhooks and polling."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('status 2xx', () => pm.expect(pm.response.code).to.be.within(200, 299));"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "8. Insights",
+      "item": [
+        {
+          "name": "8.1 Dashboard (ledger-based)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/console/{{venueSlug}}/dashboard",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "console",
+                "{{venueSlug}}",
+                "dashboard"
+              ]
+            },
+            "description": "Per-show gross, PayPal fees, platform fee, payouts; buyer countries; totals."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('status 2xx', () => pm.expect(pm.response.code).to.be.within(200, 299));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "8.2 Payments and webhook log",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/console/{{venueSlug}}/payments",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "console",
+                "{{venueSlug}}",
+                "payments"
+              ]
+            },
+            "description": "Orders (with idempotency keys and confirmation source) and verified/rejected webhook events."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('status 2xx', () => pm.expect(pm.response.code).to.be.within(200, 299));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "8.3 What the AI agent did",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/console/{{venueSlug}}/agent-runs",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "console",
+                "{{venueSlug}}",
+                "agent-runs"
+              ]
+            },
+            "description": "Every message and tool call of this session's conversations, with latency and tokens."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('status 2xx', () => pm.expect(pm.response.code).to.be.within(200, 299));"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
