@@ -1,0 +1,9 @@
+/target
+.env
+.env.*
+!.env.example
+.pgdata/
+node_modules/
+web/dist/
+*.log
+.DS_Store
