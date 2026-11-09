@@ -12,6 +12,12 @@ pub enum AppError {
     BadRequest(String),
     #[error("{0}")]
     Conflict(String),
+    /// A dependency (PayPal, the LLM) is not configured on this server.
+    #[error("{0}")]
+    Unavailable(String),
+    /// A dependency answered with an error.
+    #[error("{0}")]
+    Upstream(String),
     #[error(transparent)]
     Db(#[from] sqlx::Error),
     #[error(transparent)]
@@ -26,6 +32,8 @@ impl IntoResponse for AppError {
             AppError::NotFound => (StatusCode::NOT_FOUND, "Not found".to_string()),
             AppError::BadRequest(m) => (StatusCode::BAD_REQUEST, m.clone()),
             AppError::Conflict(m) => (StatusCode::CONFLICT, m.clone()),
+            AppError::Unavailable(m) => (StatusCode::SERVICE_UNAVAILABLE, m.clone()),
+            AppError::Upstream(m) => (StatusCode::BAD_GATEWAY, m.clone()),
             AppError::Db(sqlx::Error::RowNotFound) => (StatusCode::NOT_FOUND, "Not found".to_string()),
             AppError::Db(e) => {
                 tracing::error!(error = %e, "database error");

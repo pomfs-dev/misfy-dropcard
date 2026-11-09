@@ -2,8 +2,9 @@
 //! and PayPal handles the deposit, ticket payments and the payout after the show.
 //!
 //! Commands:
-//!   misfy-dropcard serve   run the web server (default)
+//!   misfy-dropcard serve   run the web server and background jobs (default)
 //!   misfy-dropcard seed    create sample venues/artists and rebuild sample bookings around today
+//!   misfy-dropcard cycle   run one settlement/payout/reconciliation cycle and exit (for cron)
 
 use std::net::SocketAddr;
 use std::sync::Arc;
@@ -14,19 +15,28 @@ use sqlx::postgres::PgPoolOptions;
 use sqlx::PgPool;
 use tracing_subscriber::EnvFilter;
 
+mod bookings;
 mod clock;
 mod config;
 mod error;
+mod jobs;
+mod ledger;
+mod payments;
+mod paypal;
+mod payouts;
 mod routes;
 mod session;
 mod settlement;
+mod webhooks;
 
 use config::Config;
+use paypal::PayPal;
 
 #[derive(Clone)]
 pub struct AppState {
     pub db: PgPool,
     pub cfg: Arc<Config>,
+    pub paypal: Option<Arc<PayPal>>,
 }
 
 #[tokio::main]
@@ -48,19 +58,30 @@ async fn main() -> Result<()> {
         .context("connecting to Postgres")?;
     sqlx::migrate!("./migrations").run(&db).await.context("running migrations")?;
 
+    let paypal = cfg.paypal.clone().map(|p| Arc::new(PayPal::new(p)));
+    tracing::info!(
+        paypal = paypal.is_some(),
+        webhook_verification = paypal.as_ref().map(|p| p.webhook_configured()).unwrap_or(false),
+        llm = cfg.llm.as_ref().map(|l| l.model.as_str()).unwrap_or("off"),
+        "configuration"
+    );
+    let state = AppState { db, cfg: Arc::new(cfg), paypal };
+
     let command = std::env::args().nth(1).unwrap_or_else(|| "serve".to_string());
     match command.as_str() {
-        "serve" => serve(db, cfg).await,
-        "seed" => seed(&db, &cfg).await,
-        other => anyhow::bail!("unknown command `{other}` (expected: serve | seed)"),
+        "serve" => serve(state).await,
+        "seed" => seed(&state).await,
+        "cycle" => jobs::run_cycle(&state, None).await,
+        other => anyhow::bail!("unknown command `{other}` (expected: serve | seed | cycle)"),
     }
 }
 
-async fn serve(db: PgPool, cfg: Config) -> Result<()> {
-    let port = cfg.port;
-    let state = AppState { db, cfg: Arc::new(cfg) };
+async fn serve(state: AppState) -> Result<()> {
+    if state.cfg.run_jobs {
+        jobs::spawn(state.clone());
+    }
+    let addr = SocketAddr::from(([0, 0, 0, 0], state.cfg.port));
     let app = routes::router(state);
-    let addr = SocketAddr::from(([0, 0, 0, 0], port));
     let listener = tokio::net::TcpListener::bind(addr).await.with_context(|| format!("binding {addr}"))?;
     tracing::info!("listening on http://{addr}");
     axum::serve(listener, app).with_graceful_shutdown(shutdown_signal()).await?;
@@ -68,9 +89,10 @@ async fn serve(db: PgPool, cfg: Config) -> Result<()> {
 }
 
 /// Sample data: idempotent. Rebuilds only the shared sample bookings; visitors' bookings are kept.
-async fn seed(db: &PgPool, cfg: &Config) -> Result<()> {
+async fn seed(state: &AppState) -> Result<()> {
+    let db = &state.db;
     sqlx::query("SELECT seed_entities()").execute(db).await?;
-    let r = &cfg.sandbox_receivers;
+    let r = &state.cfg.sandbox_receivers;
     if let Some(email) = &r.venue {
         sqlx::query("UPDATE venues SET payout_email = $1").bind(email).execute(db).await?;
     }

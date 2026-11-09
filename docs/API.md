@@ -21,7 +21,7 @@ Conventions
 | ✅ | `POST /api/demo/clock/advance` | `{"hours": 1..720}` | `Session` (409 past +90 days) |
 | ✅ | `POST /api/demo/clock/reset` | | `Session` |
 | ✅ | `POST /api/demo/reset` | | `Session` — deletes this visitor's bookings and conversations |
-| 🛠 | `GET /api/config` | | `{"paypal_client_id": string\|null, "paypal_env": "sandbox", "currency": "USD", "llm_enabled": bool}` |
+| ✅ | `GET /api/config` | | `{"paypal_client_id": string\|null, "paypal_env": "sandbox", "currency": "USD", "llm_enabled": bool, "webhook_verification": bool}` |
 
 ```ts
 type Session = { session_id: string; now: string; clock_offset_seconds: number };
@@ -83,9 +83,9 @@ call is recorded as `blocked`).
 
 | | Endpoint | Body | Response |
 |---|---|---|---|
-| 🛠 | `GET /api/bookings/{id}` | | `Booking` (poll this while waiting for the webhook) |
-| 🛠 | `POST /api/bookings/{id}/request` | `{"inquiry_text"?: string}` | `Booking` — proposal → hold (409 if the slot was taken) |
-| 🛠 | `POST /api/bookings/{id}/cancel` | | `Booking` |
+| ✅ | `GET /api/bookings/{id}` | | `Booking` (poll this while waiting for the webhook) |
+| ✅ | `POST /api/bookings/{id}/request` | `{"inquiry_text"?: string}` | `Booking` — proposal → hold (409 if the slot was taken) |
+| ✅ | `POST /api/bookings/{id}/cancel` | | `Booking` |
 
 ```ts
 type BookingSummary = { id: string; title: string; status: BookingStatus; space_id: string; space_name: string;
@@ -97,8 +97,10 @@ type Booking = BookingSummary & {
   ticket_price_cents: number | null;
   inquiry_text: string | null;
   approved_at: string | null;
+  conversation_id: string | null;
   deposit_order: { paypal_order_id: string | null; status: string; amount_cents: number;
-                   captured_at: string | null } | null;
+                   captured_at: string | null;
+                   confirmed_by: "webhook" | "reconciliation" | null } | null;
   settlement: Settlement | null;
   timeline: { at: string; label: string }[];   // e.g. "AI proposed", "Requested", "Approved by venue",
                                                // "Deposit paid (PayPal webhook verified)", "Show ended", "Paid out"
@@ -109,9 +111,15 @@ type Booking = BookingSummary & {
 
 | | Endpoint | Body / headers | Response |
 |---|---|---|---|
-| 🛠 | `POST /api/bookings/{id}/deposit-order` | header `Idempotency-Key: <uuid>` | `{"paypal_order_id": string, "amount_cents": number, "currency": "USD"}` (409 unless status is `approved`) |
-| 🛠 | `POST /api/paypal/orders/{paypal_order_id}/capture` | | `{"status": "pending_webhook" \| "captured" \| "failed", "booking": Booking}` |
-| 🛠 | `POST /api/paypal/webhook` | (PayPal → server) | `200` |
+| ✅ | `POST /api/bookings/{id}/deposit-order` | header `Idempotency-Key: <uuid>` | `{"paypal_order_id": string, "amount_cents": number, "currency": "USD"}` (409 unless status is `approved`; 503 while PayPal is not configured) |
+| ✅ | `POST /api/shows/{id}/ticket-order` | `{"quantity": 1..6}`, header `Idempotency-Key: <uuid>` | same as above — tickets for a **confirmed (`paid`) show of this session**; one key per purchase |
+| ✅ | `POST /api/paypal/orders/{paypal_order_id}/capture` | | `{"status": "pending_webhook" \| "captured" \| "failed", "message": string \| null, "booking": Booking}` |
+| ✅ | `POST /api/paypal/webhook` | (PayPal → server) | `200` |
+
+Ticket sales are what make the payout split visible: after a show with tickets sold, one Payouts batch pays the
+venue (deposit + its ticket share), the artist and the promoter. Offer "Buy tickets" on a booking once it is `paid`
+(a fan's view; any PayPal sandbox buyer can pay). On `"failed"` show `message` and let the buyer try again
+(`actions.restart()` in the SDK).
 
 Frontend flow with the PayPal JS SDK (`@paypal/paypal-js`, client id from `/api/config`):
 
@@ -134,20 +142,25 @@ The same visitor can switch to the venue owner role. Owner actions apply to book
 
 | | Endpoint | Body | Response |
 |---|---|---|---|
-| 🛠 | `GET /api/console/{slug}/inbox` | | `Booking[]` — holds waiting for approval |
-| 🛠 | `POST /api/console/bookings/{id}/approve` | | `Booking` |
-| 🛠 | `POST /api/console/bookings/{id}/decline` | | `Booking` |
-| 🛠 | `PATCH /api/console/bookings/{id}` | `{"space_id"?, "starts_at"?, "ends_at"?}` | `Booking` — drag/resize on the scheduler (proposals and holds only; 409 on overlap) |
-| 🛠 | `GET /api/console/{slug}/payments` | | `Payments` |
-| 🛠 | `GET /api/console/{slug}/payouts` | | `{"batches": Settlement[]}` |
-| 🛠 | `POST /api/console/{slug}/settlement/run` | | `{"batches": Settlement[]}` — run due settlements now (uses the session clock) |
-| 🛠 | `GET /api/console/{slug}/agent-runs` | | `{"runs": AgentRun[]}` |
-| 🛠 | `GET /api/console/{slug}/dashboard` | | `Dashboard` |
+| ✅ | `GET /api/console/{slug}/inbox` | | `Booking[]` — holds waiting for approval first, then approved bookings waiting for the deposit |
+| ✅ | `POST /api/console/bookings/{id}/approve` | | `Booking` |
+| ✅ | `POST /api/console/bookings/{id}/decline` | | `Booking` |
+| ✅ | `PATCH /api/console/bookings/{id}` | `{"space_id"?, "starts_at"?, "ends_at"?}` | `Booking` — drag/resize on the scheduler (proposals and holds only; 409 on overlap) |
+| ✅ | `GET /api/console/{slug}/payments` | | `Payments` |
+| ✅ | `GET /api/console/{slug}/payouts` | | `{"batches": Settlement[]}` |
+| ✅ | `POST /api/console/{slug}/settlement/run` | | `{"batches": Settlement[]}` — run due settlements now (uses the session clock) |
+| ✅ | `GET /api/console/{slug}/agent-runs` | | `{"runs": AgentRun[]}` |
+| ✅ | `GET /api/console/{slug}/dashboard` | | `Dashboard` |
+
+Payouts are planned at 09:00 venue time on the day after the show, then sent to PayPal. Background jobs run every
+15 s; "Run settlement now" runs them immediately for this visitor. Typical demo: book → approve → pay deposit →
+buy a ticket → "+1 week" on the demo clock → "Run settlement now" → items move planned → pending → succeeded.
 
 ```ts
 type Settlement = { id: string; booking_id: string; booking_title: string; sender_batch_id: string;
   paypal_batch_id: string | null; status: "planned" | "submitted" | "succeeded" | "partial" | "failed";
   scheduled_for: string; net_cents: number; platform_fee_cents: number; sample: boolean;
+  submitted_at: string | null; completed_at: string | null; last_error: string | null;
   items: { role: "venue" | "artist" | "promoter"; recipient_email: string; amount_cents: number;
            status: "planned" | "pending" | "succeeded" | "failed" | "unclaimed" | "returned";
            paypal_item_id: string | null; attempts: number; error: string | null }[] };
@@ -155,13 +168,14 @@ type Payments = {
   orders: { id: string; booking_id: string; booking_title: string; kind: "deposit" | "ticket";
     source: "paypal_sandbox" | "sample"; paypal_order_id: string | null; request_id: string;
     quantity: number; amount_cents: number; paypal_fee_cents: number | null; status: string;
-    payer_country: string | null; created_at: string; captured_at: string | null }[];
+    payer_country: string | null; confirmed_by: "webhook" | "reconciliation" | null;
+    created_at: string; captured_at: string | null }[];
   webhooks: { id: number; event_type: string; resource_id: string | null; signature_valid: boolean;
     received_at: string; outcome: string | null; error: string | null }[];
 };
 type AgentRun = { conversation_id: string; step: number; kind: "user" | "assistant" | "tool_call" | "tool_result" |
   "blocked" | "error"; tool_name: string | null; input: unknown; output: unknown; latency_ms: number | null;
-  created_at: string };
+  input_tokens: number | null; output_tokens: number | null; created_at: string };
 type Dashboard = {
   shows: { booking_id: string; date: string; title: string; space: string; status: BookingStatus; sample: boolean;
     tickets_sold: number; gross_cents: number; paypal_fees_cents: number; refunds_cents: number;
