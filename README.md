@@ -6,10 +6,12 @@ approves, ticket sales, and the payout to the venue, the artist and the promoter
 Built for the PayPal AI Hackathon 2026. A new, standalone service made for MiSFY's venue cards: it shares no code,
 keys or infrastructure with the existing MiSFY app, and it only ever talks to the **PayPal sandbox**.
 
-> **Status (2026-11-11).** Server, database, PayPal integration (Orders v2, webhooks, Payouts), the AI venue scout,
-> settlement and the web frontend are implemented and tested — locally against the real PayPal sandbox and the real
-> Claude API, and end to end against local stand-ins (see [Testing](#testing)). In progress: the Render deployment.
-> Live demo URL: _coming soon_.
+> **Live demo: https://misfy-dropcard.onrender.com** (PayPal sandbox only; the first page is the AI venue scout).
+>
+> **Status (2026-11-12).** Server, database, PayPal integration (Orders v2, webhooks, Payouts), the AI venue scout,
+> settlement and the web frontend are implemented and tested — locally and on the hosted demo against the real PayPal
+> sandbox and the real Claude API, and end to end against local stand-ins (see [Testing](#testing)). The demo runs on
+> Render (web service, Postgres and a nightly cron job, see `render.yaml`).
 >
 > **Judges:** the sandbox buyer login for the live demo is in the Devpost testing instructions.
 
