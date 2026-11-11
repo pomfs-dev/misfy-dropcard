@@ -32,15 +32,16 @@ services:
         sync: false
       - key: SANDBOX_PROMOTER_EMAIL
         sync: false
-      - key: ANTHROPIC_API_KEY
+      - key: ANTHROPIC_API_KEY  # turns on the AI venue scout
         sync: false
       - key: LLM_MODEL
         value: claude-opus-5-5
       - key: LLM_EFFORT
         value: medium
-      # Concierge messages per day across all visitors (cost guard for a public demo; ~$0.05–0.10 each).
       - key: LLM_DAILY_TURN_CAP
-        value: "300"
+        # AI venue scout messages per day across all visitors (about $0.04 each with Opus 5.5). Venue cards keep
+        # working with the booking form when the cap is reached.
+        value: "50"
 
   - type: cron
     name: misfy-dropcard-sample-refresh

@@ -34,6 +34,8 @@ type Session = { session_id: string; now: string; clock_offset_seconds: number }
 | ✅ | `GET /api/venues` | `Venue[]` |
 | ✅ | `GET /api/venues/{slug}` | `Card` |
 | ✅ | `GET /api/venues/{slug}/schedule?from=&to=` | `Schedule` (default window: now−14d … now+75d, max 190 days) |
+| ✅ | `POST /api/venues/{slug}/proposals` | `ProposalResult` — the booking form (no AI): up to three open slots, saved as proposals |
+| ✅ | `GET /api/artists` | `{ slug, name, genre, country }[]` — the roster (headliners, and the artists the scout works for) |
 
 ```ts
 type Venue = { id: string; slug: string; name: string; city: string; country: string; tagline: string;
@@ -49,17 +51,22 @@ type ScheduleEvent = { id: string; space_id: string; title: string; status: Book
   sample: boolean }; // shared fictional sample data
 type Schedule = { now: string; from: string; to: string; tz_offset_minutes: number;
   spaces: Space[]; events: ScheduleEvent[] };
+type ProposalRequest = { from_date: string; to_date: string;      // YYYY-MM-DD, venue time
+  weekdays?: ("Mon" | "Tue" | "Wed" | "Thu" | "Fri" | "Sat" | "Sun")[]; headcount?: number;
+  start_time?: string /* "HH:MM", default 19:00 */; hours?: number /* 1–12, default 4 */;
+  title?: string; genre?: string; artist?: string /* slug or name */ };
+type ProposalResult = { search_id: string; proposals: BookingSummary[]; note: string | null };
 ```
 
 Other people's holds come back with the title `"On hold"`. AI proposals (`ai_proposed`) do not reserve the slot;
 draw them as dashed outlines. Suggested colors: completed = grey, paid = green `#2AD829`, approved = blue `#1E88E5`,
 hold = yellow `#EAB308` striped, ai_proposed = dashed outline.
 
-## AI booking concierge
+## AI agents: the venue scout and a venue's concierge
 
 | | Endpoint | Body | Response |
 |---|---|---|---|
-| ✅ | `POST /api/agent/chat` | `{"venue_slug": string, "conversation_id"?: string, "message": string}` | `ChatTurn` (503 while the LLM key is not configured; a turn can take 10–40 s) |
+| ✅ | `POST /api/agent/chat` | Scout: `{"artist"?: string, "conversation_id"?: string, "message": string}` · Concierge: `{"venue_slug": string, "conversation_id"?: string, "message": string}` | `ChatTurn` (503 while the LLM key is not configured; a turn can take 10–40 s) |
 | ✅ | `GET /api/agent/conversations/{id}` | | `{"conversation_id": string, "messages": ChatMessage[], "proposals": BookingSummary[], "booking": Booking \| null}` |
 
 ```ts
@@ -70,16 +77,27 @@ type ChatTurn = {
   reply: string;              // assistant text (plain text, may contain line breaks and "- " bullets)
   tool_calls: ToolCall[];     // what the agent did this turn, in order (show as small chips)
   proposals: BookingSummary[];// slots the agent proposed this turn (dashed bars on the schedule)
-  booking: Booking | null;    // the booking this conversation is about, once the promoter picked a slot
+  booking: Booking | null;    // the booking this conversation is about, once a slot was picked
   limited: boolean;           // true if the daily safety cap was reached (reply explains it)
+  venues: VenueHit[];         // scout: the latest venue search this turn (show as cards)
 };
+type VenueHit = { slug: string; name: string; city: string; country: string; region: string | null;
+  kind: string | null; genres: string[];
+  capacity: number;                 // the bookable room (made up for directory venues)
+  shows_on_record: number | null;   // shows the discovery data has on record (rounded)
+  activity: number;                 // 0–100: percentile of shows_on_record — a busy calendar, not live popularity
+  quote_from_cents: number; featured: boolean;
+  data_source: "sample" | "discovery" };
 ```
 
-The agent's tools: `check_availability`, `find_artists`, `propose_slots`, `request_booking` (turns a proposal into a
-hold with an inquiry), `get_booking_status`, `create_deposit_order` (**only allowed after the venue approved**;
-otherwise the call is recorded as `blocked`). Start a new conversation by omitting `conversation_id`; keep the
-returned id for the next messages. Disable the input while a turn is running (a second message in the same
-conversation at the same time gets a 409).
+Without `venue_slug` the request goes to the **AI venue scout**, which works for one artist (`artist` slug, default
+`hollow-arcade`; fixed for the conversation). Its tools: `search_venues` (the venue directory, ranked by activity),
+`check_availability` and `propose_slots` (both name the venue by slug), `request_booking` (turns a proposal into a
+hold with the proposal letter the agent writes), `get_booking_status`, `create_deposit_order` (**only allowed after
+the venue approved**; otherwise the call is recorded as `blocked`). With `venue_slug` the request goes to that venue's
+booking concierge, with the same tools minus `search_venues` plus `find_artists`. Start a new conversation by
+omitting `conversation_id`; keep the returned id for the next messages. Disable the input while a turn is running (a
+second message in the same conversation at the same time gets a 409).
 
 ## Bookings
 
@@ -92,9 +110,9 @@ conversation at the same time gets a 409).
 ```ts
 type BookingSummary = { id: string; title: string; status: BookingStatus; space_id: string; space_name: string;
   starts_at: string; ends_at: string; quote_cents: number; deposit_cents: number;
-  headcount: number | null; genre: string | null; created_by: "sample" | "agent" | "owner" | "promoter" };
+  headcount: number | null; genre: string | null; created_by: "sample" | "agent" | "owner" | "promoter";
+  venue_slug: string; venue_name: string; venue_tz: number /* UTC offset in minutes */ };
 type Booking = BookingSummary & {
-  venue_slug: string;
   artist: { slug: string; name: string } | null;
   ticket_price_cents: number | null;
   tickets_sold: number;          // tickets with a confirmed PayPal capture

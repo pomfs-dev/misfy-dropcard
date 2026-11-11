@@ -2,7 +2,7 @@
   "info": {
     "name": "MiSFY DropCard — PayPal + AI booking flow",
     "_postman_id": "6f0f3c1e-5b7a-4c1e-9d1a-dc0000000001",
-    "description": "Reproduce the full flow against a running MiSFY DropCard server: AI concierge → venue approval → PayPal Orders v2 deposit (confirmed by webhook) → tickets → demo clock → PayPal Payouts settlement → ledger-based dashboard.\n\nSet `baseUrl` to the hosted demo or to http://localhost:8080. Postman keeps the `dc_sid` cookie, which is your demo session. Run the folders in order. One step needs a browser: approving the PayPal payment as the sandbox buyer (see '5.2').",
+    "description": "Reproduce the full flow against a running MiSFY DropCard server: AI venue scout (Claude: search venues, check dates, send the proposal) → venue approval → PayPal Orders v2 deposit (confirmed by webhook) → tickets → demo clock → PayPal Payouts settlement → ledger-based dashboard.\n\nSet `baseUrl` to the hosted demo or to http://localhost:8080. Postman keeps the `dc_sid` cookie, which is your demo session. Run the folders in order. One step needs a browser: approving the PayPal payment as the sandbox buyer (see '5.2').",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },
   "variable": [
@@ -172,10 +172,10 @@
       ]
     },
     {
-      "name": "3. AI concierge (Claude)",
+      "name": "3. AI venue scout (Claude)",
       "item": [
         {
-          "name": "3.1 Ask for dates",
+          "name": "3.1 Ask the scout",
           "request": {
             "method": "POST",
             "header": [
@@ -198,7 +198,7 @@
             "description": "Claude checks availability with tools and proposes up to 3 slots (status ai_proposed). Stores the conversation id and the first proposal as bookingId.",
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"venue_slug\": \"{{venueSlug}}\",\n  \"message\": \"A Friday night in the next few weeks for about 300 people \\u2014 synthwave, with Hollow Arcade if possible.\"\n}",
+              "raw": "{\n  \"artist\": \"hollow-arcade\",\n  \"message\": \"The busiest venues in Seoul for a synthwave show, about 300 people. Check dates at the best fit for a Friday in the next few weeks.\"\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -215,15 +215,16 @@
                   "pm.test('status 2xx', () => pm.expect(pm.response.code).to.be.within(200, 299));",
                   "const d = pm.response.json();",
                   "pm.collectionVariables.set('conversationId', d.conversation_id);",
-                  "if (d.proposals && d.proposals.length) pm.collectionVariables.set('bookingId', d.proposals[0].id);",
-                  "pm.test('agent used tools', () => pm.expect(d.tool_calls.length).to.be.above(0));"
+                  "if (d.proposals && d.proposals.length) { pm.collectionVariables.set('bookingId', d.proposals[0].id); pm.collectionVariables.set('venueSlug', d.proposals[0].venue_slug); }",
+                  "pm.test('the scout searched the venue directory', () => pm.expect(d.tool_calls.map(t => t.name)).to.include('search_venues'));",
+                  "pm.test('venues came back ranked by activity', () => pm.expect(d.venues.map(v => v.activity)).to.eql([...d.venues.map(v => v.activity)].sort((a, b) => b - a)));"
                 ]
               }
             }
           ]
         },
         {
-          "name": "3.2 Pick the first slot",
+          "name": "3.2 Send the proposal for the first slot",
           "request": {
             "method": "POST",
             "header": [
@@ -246,7 +247,7 @@
             "description": "Asks the agent to send the request for the first proposal (request_booking → hold).",
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"venue_slug\": \"{{venueSlug}}\",\n  \"conversation_id\": \"{{conversationId}}\",\n  \"message\": \"Book the first option please. We need a DJ booth.\"\n}",
+              "raw": "{\n  \"conversation_id\": \"{{conversationId}}\",\n  \"message\": \"Send the proposal for the first option please. We need a DJ booth.\"\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -262,7 +263,8 @@
                 "exec": [
                   "pm.test('status 2xx', () => pm.expect(pm.response.code).to.be.within(200, 299));",
                   "const d = pm.response.json();",
-                  "if (d.booking) pm.collectionVariables.set('bookingId', d.booking.id);"
+                  "if (d.booking) { pm.collectionVariables.set('bookingId', d.booking.id); pm.collectionVariables.set('venueSlug', d.booking.venue_slug); }",
+                  "pm.test('the proposal was sent (hold)', () => pm.expect(d.booking && d.booking.status).to.eql('hold'));"
                 ]
               }
             }
@@ -292,7 +294,7 @@
             "description": "The agent's create_deposit_order tool is refused by the server until the venue approves; the refusal shows up as a 'blocked' tool call.",
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"venue_slug\": \"{{venueSlug}}\",\n  \"conversation_id\": \"{{conversationId}}\",\n  \"message\": \"Can I pay the deposit now?\"\n}",
+              "raw": "{\n  \"conversation_id\": \"{{conversationId}}\",\n  \"message\": \"Can I pay the deposit now?\"\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -359,7 +361,8 @@
             }
           ]
         }
-      ]
+      ],
+      "description": "The scout works for one artist (hollow-arcade). It searches the venue directory ranked by activity, checks dates at the best fit, proposes slots and sends the proposal it writes. The tests store the booking's venue in venueSlug for the owner steps that follow."
     },
     {
       "name": "4. Venue owner",
