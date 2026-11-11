@@ -117,7 +117,10 @@ export function TopBar() {
 export function Footer() {
   return (
     <footer className="footer">
-      <p>All venues, artists and transactions marked Sample are fictional. Payments run in the PayPal sandbox.</p>
+      <p>
+        Venues, artists and transactions marked Sample are fictional; Discovery data is pseudonymized and rounded. Payments
+        run in the PayPal sandbox.
+      </p>
     </footer>
   );
 }

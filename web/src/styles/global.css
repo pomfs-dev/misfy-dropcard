@@ -2539,8 +2539,9 @@ button {
   color: var(--muted);
 }
 
-.chat--scout .chat__list {
-  min-height: 420px;
+/* The scout's chat is the page: taller than a venue card's chat, and it scrolls inside. */
+.chat.chat--scout {
+  height: clamp(560px, calc(100vh - 120px), 1100px);
 }
 
 /* Venue results of the scout's search */
@@ -2549,7 +2550,7 @@ button {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
   gap: 10px;
-  margin-top: 10px;
+  width: 100%;
 }
 
 .vhit {
@@ -2702,7 +2703,15 @@ button {
     grid-template-columns: minmax(0, 1fr);
   }
 
-  .chat--scout .chat__list {
-    min-height: 320px;
+  .chat.chat--scout {
+    height: clamp(520px, calc(100vh - 100px), 900px);
   }
+}
+
+.slot__next {
+  display: block;
+  margin-top: 4px;
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--text);
 }

@@ -168,7 +168,12 @@ pub async fn load(db: &PgPool, session: Uuid, id: Uuid) -> AppResult<Booking> {
         },
     }];
     if let Some(at) = d.requested_at {
-        timeline.push(TimelineEntry { at, label: "Requested by the promoter (inquiry sent)".into() });
+        let label = if summary.created_by == "agent" {
+            "Proposal sent to the venue (written by the AI)"
+        } else {
+            "Requested by the promoter (inquiry sent)"
+        };
+        timeline.push(TimelineEntry { at, label: label.into() });
     }
     if let Some(at) = d.approved_at {
         timeline.push(TimelineEntry { at, label: "Approved by the venue".into() });

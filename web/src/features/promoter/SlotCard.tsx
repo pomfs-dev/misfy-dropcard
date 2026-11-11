@@ -80,20 +80,19 @@ export function SlotCard({
               : picked?.status === "paid"
                 ? "Confirmed — deposit paid."
                 : "Requested."}
-          {showVenue && picked?.status === "hold" && (
-            <>
-              {" "}
-              <Link to={`/console/${p.venue_slug}`}>Approve it as the venue owner</Link>
-            </>
-          )}
-          {showVenue && picked?.status === "approved" && (
-            <>
-              {" "}
-              <Link to={`/v/${p.venue_slug}`}>Pay the deposit on the venue’s card</Link>
-            </>
-          )}
         </p>
-      ) : otherRequested ? (
+      ) : null}
+      {isRequested && showVenue && picked?.status === "hold" && (
+        <Link className="slot__next" to={`/console/${p.venue_slug}`}>
+          Approve it as the venue owner →
+        </Link>
+      )}
+      {isRequested && showVenue && picked?.status === "approved" && (
+        <Link className="slot__next" to={`/v/${p.venue_slug}`}>
+          Pay the deposit on the venue’s card →
+        </Link>
+      )}
+      {isRequested ? null : otherRequested ? (
         <p className="slot__released">Released when you picked another slot.</p>
       ) : (
         <button

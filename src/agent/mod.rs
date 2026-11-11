@@ -180,7 +180,7 @@ Rules
 - When details are missing, use sensible defaults (the next 6 weeks, 19:00 start, 4 hours, the artist's genre) instead of asking. Ask one short question only when you cannot go on.
 - Payments happen only in the PayPal window. Never ask for card numbers, bank details or passwords.
 - Stay on finding and booking venues; politely decline anything else.
-- Keep replies short: one or two sentences, then a brief list. The app shows venues and proposals as cards, so do not repeat slugs or booking ids.";
+- Keep replies short: what you did and what you recommend, in two or three sentences, then at most three short bullets. The app shows every venue and every proposed slot as a card with its numbers, so do not list them again and never show slugs or booking ids.";
 
 async fn scout_context(db: &PgPool, session: Uuid, artist: &ScoutArtist, conversation_id: Uuid) -> AppResult<String> {
     let now = clock::session_now(db, session).await?;

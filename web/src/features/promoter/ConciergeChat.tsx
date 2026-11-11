@@ -53,7 +53,17 @@ type Props = {
   onBooking: (b: Booking) => void;
 };
 
-/** Plain-text reply with line breaks and "- " bullets. */
+/** **bold** spans (the model sometimes marks venue names and dates); everything else stays plain text. */
+function Inline({ text }: { text: string }) {
+  const parts = text.split(/\*\*(.+?)\*\*/g);
+  return (
+    <>
+      {parts.map((part, i) => (i % 2 === 1 ? <strong key={i}>{part}</strong> : <Fragment key={i}>{part}</Fragment>))}
+    </>
+  );
+}
+
+/** Plain-text reply with line breaks, "- " bullets and **bold**. */
 function ReplyText({ text }: { text: string }) {
   const lines = text.split(/\r?\n/);
   const blocks: { type: "p" | "ul"; lines: string[] }[] = [];
@@ -80,7 +90,9 @@ function ReplyText({ text }: { text: string }) {
           b.type === "ul" ? (
             <ul key={i}>
               {b.lines.map((l, j) => (
-                <li key={j}>{l}</li>
+                <li key={j}>
+                  <Inline text={l} />
+                </li>
               ))}
             </ul>
           ) : (
@@ -88,7 +100,7 @@ function ReplyText({ text }: { text: string }) {
               {b.lines.map((l, j) => (
                 <Fragment key={j}>
                   {j > 0 && <br />}
-                  {l}
+                  <Inline text={l} />
                 </Fragment>
               ))}
             </p>
