@@ -1,151 +1,304 @@
 slug,name,city,country,region,tz_offset_minutes,kind,genres,capacity,shows_on_record,activity,source
-comet-depot-pus,Comet Depot,Busan,KR,East Asia,540,Live house,Rock / Indie|Pop / Hip-hop,450,40,84,sample
-kite-arcade-pus,Kite Arcade,Busan,KR,East Asia,540,Live house,Pop / Hip-hop|Rock / Indie,220,40,84,sample
-cinder-vault-pus,Cinder Vault,Busan,KR,East Asia,540,Live house,Pop / Hip-hop|Rock / Indie,680,35,71,sample
-comet-room-pus,Comet Room,Busan,KR,East Asia,540,Live house,Pop / Hip-hop,720,30,54,sample
-harbor-room,Harbor Room,Busan,KR,East Asia,540,Bar stage,Vocal / Soul|Jazz,250,25,32,sample
-signal-station-pus,Signal Station,Busan,KR,East Asia,540,Bar stage,Rock / Indie|Pop / Hip-hop,1120,25,32,sample
-silver-hall-pus,Silver Hall,Busan,KR,East Asia,540,Live house,Pop / Hip-hop|Rock / Indie,210,25,32,sample
-moth-lounge-pus,Moth Lounge,Busan,KR,East Asia,540,Club,Pop / Hip-hop|Rock / Indie,120,20,13,sample
-tidal-yard-pus,Tidal Yard,Busan,KR,East Asia,540,Club,Rock / Indie,130,15,3,sample
-willow-theater-hkg,Willow Theater,Hong Kong,HK,East Asia,480,Club,Electronic / DJ|Jazz,310,55,99,sample
-halo-hall-hkg,Halo Hall,Hong Kong,HK,East Asia,480,Club,Electronic / DJ,190,50,96,sample
-signal-theater-hkg,Signal Theater,Hong Kong,HK,East Asia,480,Live house,Electronic / DJ,110,50,96,sample
-silver-arcade-hkg,Silver Arcade,Hong Kong,HK,East Asia,480,Hall,Electronic / DJ,410,35,71,sample
-orbit-theater-hkg,Orbit Theater,Hong Kong,HK,East Asia,480,Club,Jazz|Electronic / DJ,1050,30,54,sample
-signal-garage-hkg,Signal Garage,Hong Kong,HK,East Asia,480,Live house,Jazz,290,25,32,sample
-marble-den-hkg,Marble Den,Hong Kong,HK,East Asia,480,Warehouse,Electronic / DJ,330,20,13,sample
-saffron-station-hkg,Saffron Station,Hong Kong,HK,East Asia,480,Live house,Electronic / DJ|Jazz,170,10,1,sample
-halo-garage-osa,Halo Garage,Osaka,JP,East Asia,540,Club,Rock / Indie|Jazz,380,45,91,sample
-pocket-loft-osa,Pocket Loft,Osaka,JP,East Asia,540,Club,Electronic / DJ,430,40,84,sample
-amber-arcade-osa,Amber Arcade,Osaka,JP,East Asia,540,Live house,Electronic / DJ|Rock / Indie,510,35,71,sample
-pocket-parlor-osa,Pocket Parlor,Osaka,JP,East Asia,540,Hall,Electronic / DJ,280,35,71,sample
-silver-annex-osa,Silver Annex,Osaka,JP,East Asia,540,Club,Electronic / DJ|Rock / Indie,630,30,54,sample
-tin-hall-osa,Tin Hall,Osaka,JP,East Asia,540,Live house,Jazz,820,30,54,sample
-hazel-dock-osa,Hazel Dock,Osaka,JP,East Asia,540,Rooftop,Jazz,110,25,32,sample
-kite-hall-osa,Kite Hall,Osaka,JP,East Asia,540,Rooftop,Electronic / DJ|Rock / Indie,230,25,32,sample
-hazel-station-osa,Hazel Station,Osaka,JP,East Asia,540,Bar stage,Electronic / DJ,450,20,13,sample
-blue-lantern,Blue Lantern Hall,Seoul,KR,East Asia,540,Live house,Rock / Indie|Electronic / DJ,500,45,91,sample
-pocket-terrace-sel,Pocket Terrace,Seoul,KR,East Asia,540,Live house,Pop / Hip-hop|Rock / Indie,190,45,91,sample
-copper-lounge-sel,Copper Lounge,Seoul,KR,East Asia,540,Hall,Electronic / DJ,130,30,54,sample
-juniper-works-sel,Juniper Works,Seoul,KR,East Asia,540,Warehouse,Rock / Indie,310,30,54,sample
-lantern-room-sel,Lantern Room,Seoul,KR,East Asia,540,Hall,Rock / Indie|Electronic / DJ,320,30,54,sample
-lantern-theater-sel,Lantern Theater,Seoul,KR,East Asia,540,Club,Pop / Hip-hop,460,30,54,sample
-lumen-loft-sel,Lumen Loft,Seoul,KR,East Asia,540,Live house,Electronic / DJ|Rock / Indie,270,30,54,sample
-neon-theater-sel,Neon Theater,Seoul,KR,East Asia,540,Bar stage,Electronic / DJ,390,25,32,sample
-basalt-yard-sel,Basalt Yard,Seoul,KR,East Asia,540,Club,Pop / Hip-hop,420,20,13,sample
-hazel-yard-tpe,Hazel Yard,Taipei,TW,East Asia,480,Rooftop,Electronic / DJ,820,50,96,sample
-pocket-vault-tpe,Pocket Vault,Taipei,TW,East Asia,480,Club,Electronic / DJ,270,35,71,sample
-copper-terrace-tpe,Copper Terrace,Taipei,TW,East Asia,480,Bar stage,Rock / Indie,510,30,54,sample
-prism-yard-tpe,Prism Yard,Taipei,TW,East Asia,480,Hall,Electronic / DJ|Rock / Indie,290,30,54,sample
-cobalt-loft-tpe,Cobalt Loft,Taipei,TW,East Asia,480,Club,Electronic / DJ,410,25,32,sample
-comet-lounge-tpe,Comet Lounge,Taipei,TW,East Asia,480,Club,Electronic / DJ,510,25,32,sample
-hollow-terrace-tpe,Hollow Terrace,Taipei,TW,East Asia,480,Bar stage,Rock / Indie,760,20,13,sample
-lantern-hall-tpe,Lantern Hall,Taipei,TW,East Asia,480,Rooftop,Electronic / DJ,690,20,13,sample
-rust-lounge-tpe,Rust Lounge,Taipei,TW,East Asia,480,Bar stage,Electronic / DJ|Rock / Indie,220,20,13,sample
-grey-matter,Grey Matter,Tokyo,JP,East Asia,540,Club,Electronic / DJ|Techno / House,300,40,84,sample
-halo-cellar-tyo,Halo Cellar,Tokyo,JP,East Asia,540,Hall,Jazz|Electronic / DJ,880,40,84,sample
-paper-works-tyo,Paper Works,Tokyo,JP,East Asia,540,Live house,Rock / Indie|Electronic / DJ,400,40,84,sample
-basalt-theater-tyo,Basalt Theater,Tokyo,JP,East Asia,540,Live house,Jazz|Electronic / DJ,270,35,71,sample
-static-arcade-tyo,Static Arcade,Tokyo,JP,East Asia,540,Bar stage,Electronic / DJ,540,35,71,sample
-kite-cellar-tyo,Kite Cellar,Tokyo,JP,East Asia,540,Warehouse,Jazz,340,30,54,sample
-paper-hangar-tyo,Paper Hangar,Tokyo,JP,East Asia,540,Warehouse,Jazz,1350,25,32,sample
-willow-depot-tyo,Willow Depot,Tokyo,JP,East Asia,540,Bar stage,Electronic / DJ,110,20,13,sample
-pocket-station-tyo,Pocket Station,Tokyo,JP,East Asia,540,Live house,Electronic / DJ,540,15,3,sample
-cedar-terrace-ber,Cedar Terrace,Berlin,DE,Europe,60,Hall,Techno / House|Electronic / DJ,510,60,100,sample
-indigo-station-ber,Indigo Station,Berlin,DE,Europe,60,Live house,Electronic / DJ|Techno / House,1330,40,84,sample
-basalt-cellar-ber,Basalt Cellar,Berlin,DE,Europe,60,Hall,Electronic / DJ|Techno / House,170,35,71,sample
-hollow-garage-ber,Hollow Garage,Berlin,DE,Europe,60,Club,Techno / House|Electronic / DJ,230,30,54,sample
-static-theater-ber,Static Theater,Berlin,DE,Europe,60,Hall,Techno / House,330,30,54,sample
-prism-depot-ber,Prism Depot,Berlin,DE,Europe,60,Rooftop,Techno / House,1350,25,32,sample
-ivory-arcade-ber,Ivory Arcade,Berlin,DE,Europe,60,Live house,Techno / House,480,20,13,sample
-saffron-yard-ber,Saffron Yard,Berlin,DE,Europe,60,Club,Techno / House,310,20,13,sample
-slate-cellar-ber,Slate Cellar,Berlin,DE,Europe,60,Warehouse,Techno / House,310,20,13,sample
-juniper-hall-lon,Juniper Hall,London,GB,Europe,0,Bar stage,Electronic / DJ,200,40,84,sample
-pocket-lounge-lon,Pocket Lounge,London,GB,Europe,0,Hall,Electronic / DJ,120,40,84,sample
-ivory-works-lon,Ivory Works,London,GB,Europe,0,Bar stage,Electronic / DJ,480,35,71,sample
-slate-garage-lon,Slate Garage,London,GB,Europe,0,Live house,Rock / Indie,220,35,71,sample
-cinder-arcade-lon,Cinder Arcade,London,GB,Europe,0,Club,Electronic / DJ|Rock / Indie,390,30,54,sample
-hazel-depot-lon,Hazel Depot,London,GB,Europe,0,Club,Electronic / DJ,310,25,32,sample
-russet-dock-lon,Russet Dock,London,GB,Europe,0,Live house,Rock / Indie,1270,25,32,sample
-comet-yard-lon,Comet Yard,London,GB,Europe,0,Club,Electronic / DJ|Rock / Indie,210,20,13,sample
-static-room-lon,Static Room,London,GB,Europe,0,Hall,Rock / Indie,1020,20,13,sample
-silver-cellar-lax,Silver Cellar,Los Angeles,US,North America,-480,Club,Electronic / DJ|Pop / Hip-hop,550,45,91,sample
-lantern-foundry-lax,Lantern Foundry,Los Angeles,US,North America,-480,Bar stage,Pop / Hip-hop|Rock / Indie,790,40,84,sample
-ivory-garage-lax,Ivory Garage,Los Angeles,US,North America,-480,Bar stage,Electronic / DJ,290,30,54,sample
-moth-terrace-lax,Moth Terrace,Los Angeles,US,North America,-480,Live house,Rock / Indie,230,30,54,sample
-copper-arcade-lax,Copper Arcade,Los Angeles,US,North America,-480,Warehouse,Rock / Indie,340,25,32,sample
-halo-terrace-lax,Halo Terrace,Los Angeles,US,North America,-480,Live house,Pop / Hip-hop|Rock / Indie,280,25,32,sample
-neon-lounge-lax,Neon Lounge,Los Angeles,US,North America,-480,Live house,Electronic / DJ,120,25,32,sample
-pocket-den-lax,Pocket Den,Los Angeles,US,North America,-480,Club,Rock / Indie,470,20,13,sample
-paper-terrace-nyc,Paper Terrace,New York City,US,North America,-300,Live house,Jazz,170,50,96,sample
-saffron-cellar-nyc,Saffron Cellar,New York City,US,North America,-300,Hall,Rock / Indie,170,35,71,sample
-velvet-room-nyc,Velvet Room,New York City,US,North America,-300,Bar stage,Jazz,670,35,71,sample
-hollow-annex-nyc,Hollow Annex,New York City,US,North America,-300,Club,Pop / Hip-hop,460,30,54,sample
-tidal-den-nyc,Tidal Den,New York City,US,North America,-300,Warehouse,Rock / Indie,200,30,54,sample
-tin-dock-nyc,Tin Dock,New York City,US,North America,-300,Bar stage,Pop / Hip-hop,340,30,54,sample
-marble-terrace-nyc,Marble Terrace,New York City,US,North America,-300,Club,Rock / Indie,610,25,32,sample
-hollow-theater-mel,Hollow Theater,Melbourne,AU,Oceania,660,Hall,Rock / Indie,210,50,96,sample
-indigo-loft-mel,Indigo Loft,Melbourne,AU,Oceania,660,Hall,Vocal / Soul,210,40,84,sample
-saffron-foundry-mel,Saffron Foundry,Melbourne,AU,Oceania,660,Club,Vocal / Soul,730,40,84,sample
-cinder-room-mel,Cinder Room,Melbourne,AU,Oceania,660,Live house,Rock / Indie,180,30,54,sample
-iron-theater-mel,Iron Theater,Melbourne,AU,Oceania,660,Hall,Rock / Indie,120,30,54,sample
-glass-lounge-mel,Glass Lounge,Melbourne,AU,Oceania,660,Club,Rock / Indie,440,25,32,sample
-basalt-parlor-mel,Basalt Parlor,Melbourne,AU,Oceania,660,Club,Vocal / Soul,330,20,13,sample
-kite-vault-mel,Kite Vault,Melbourne,AU,Oceania,660,Rooftop,Vocal / Soul|Rock / Indie,320,20,13,sample
-hollow-cellar-syd,Hollow Cellar,Sydney,AU,Oceania,660,Hall,Electronic / DJ|Rock / Indie,180,50,96,sample
-lumen-theater-syd,Lumen Theater,Sydney,AU,Oceania,660,Club,Electronic / DJ|Rock / Indie,170,50,96,sample
-signal-parlor-syd,Signal Parlor,Sydney,AU,Oceania,660,Live house,Rock / Indie,200,45,91,sample
-glass-foundry-syd,Glass Foundry,Sydney,AU,Oceania,660,Club,Rock / Indie,720,30,54,sample
-moth-room-syd,Moth Room,Sydney,AU,Oceania,660,Live house,Rock / Indie,400,30,54,sample
-tin-yard-syd,Tin Yard,Sydney,AU,Oceania,660,Warehouse,Rock / Indie|Electronic / DJ,130,25,32,sample
-saffron-hangar-syd,Saffron Hangar,Sydney,AU,Oceania,660,Bar stage,Rock / Indie|Electronic / DJ,510,20,13,sample
-tin-station-syd,Tin Station,Sydney,AU,Oceania,660,Club,Rock / Indie,260,20,13,sample
-marble-theater-bkk,Marble Theater,Bangkok,TH,Southeast Asia,420,Rooftop,Electronic / DJ,210,35,71,sample
-orbit-arcade-bkk,Orbit Arcade,Bangkok,TH,Southeast Asia,420,Live house,Electronic / DJ,590,35,71,sample
-cedar-depot-bkk,Cedar Depot,Bangkok,TH,Southeast Asia,420,Club,Rock / Indie,290,25,32,sample
-coral-works-bkk,Coral Works,Bangkok,TH,Southeast Asia,420,Live house,Rock / Indie,320,25,32,sample
-hazel-foundry-bkk,Hazel Foundry,Bangkok,TH,Southeast Asia,420,Live house,Rock / Indie,1070,25,32,sample
-velvet-annex-bkk,Velvet Annex,Bangkok,TH,Southeast Asia,420,Rooftop,Rock / Indie,310,25,32,sample
-cedar-hangar-bkk,Cedar Hangar,Bangkok,TH,Southeast Asia,420,Club,Rock / Indie|Electronic / DJ,110,20,13,sample
-cinder-foundry-bkk,Cinder Foundry,Bangkok,TH,Southeast Asia,420,Live house,Electronic / DJ|Rock / Indie,270,15,3,sample
-rust-loft-bkk,Rust Loft,Bangkok,TH,Southeast Asia,420,Club,Rock / Indie,260,15,3,sample
-cinder-dock-sgn,Cinder Dock,Ho Chi Minh City,VN,Southeast Asia,420,Live house,Pop / Hip-hop,180,50,96,sample
-paper-room-sgn,Paper Room,Ho Chi Minh City,VN,Southeast Asia,420,Warehouse,Pop / Hip-hop|Electronic / DJ,520,40,84,sample
-cinder-yard-sgn,Cinder Yard,Ho Chi Minh City,VN,Southeast Asia,420,Club,Pop / Hip-hop,920,35,71,sample
-velvet-loft-sgn,Velvet Loft,Ho Chi Minh City,VN,Southeast Asia,420,Club,Pop / Hip-hop|Electronic / DJ,170,30,54,sample
-ember-lounge-sgn,Ember Lounge,Ho Chi Minh City,VN,Southeast Asia,420,Bar stage,Pop / Hip-hop|Electronic / DJ,330,25,32,sample
-pocket-hangar-sgn,Pocket Hangar,Ho Chi Minh City,VN,Southeast Asia,420,Live house,Electronic / DJ,450,25,32,sample
-saffron-annex-sgn,Saffron Annex,Ho Chi Minh City,VN,Southeast Asia,420,Bar stage,Pop / Hip-hop,340,20,13,sample
-fog-lounge-sgn,Fog Lounge,Ho Chi Minh City,VN,Southeast Asia,420,Live house,Pop / Hip-hop,270,15,3,sample
-halo-annex-jkt,Halo Annex,Jakarta,ID,Southeast Asia,420,Club,Pop / Hip-hop,410,45,91,sample
-comet-hall-jkt,Comet Hall,Jakarta,ID,Southeast Asia,420,Live house,Pop / Hip-hop,320,35,71,sample
-rust-parlor-jkt,Rust Parlor,Jakarta,ID,Southeast Asia,420,Live house,Rock / Indie,180,35,71,sample
-cinder-garage-jkt,Cinder Garage,Jakarta,ID,Southeast Asia,420,Live house,Rock / Indie,130,30,54,sample
-signal-cellar-jkt,Signal Cellar,Jakarta,ID,Southeast Asia,420,Bar stage,Pop / Hip-hop|Rock / Indie,280,30,54,sample
-velvet-cellar-jkt,Velvet Cellar,Jakarta,ID,Southeast Asia,420,Bar stage,Rock / Indie,450,30,54,sample
-halo-depot-jkt,Halo Depot,Jakarta,ID,Southeast Asia,420,Live house,Pop / Hip-hop|Rock / Indie,610,25,32,sample
-ivory-den-jkt,Ivory Den,Jakarta,ID,Southeast Asia,420,Club,Pop / Hip-hop|Rock / Indie,640,25,32,sample
-signal-terrace-jkt,Signal Terrace,Jakarta,ID,Southeast Asia,420,Bar stage,Rock / Indie,280,20,13,sample
-hollow-arcade-kul,Hollow Arcade,Kuala Lumpur,MY,Southeast Asia,480,Live house,Electronic / DJ,270,40,84,sample
-static-station-kul,Static Station,Kuala Lumpur,MY,Southeast Asia,480,Club,Rock / Indie|Electronic / DJ,300,40,84,sample
-halo-works-kul,Halo Works,Kuala Lumpur,MY,Southeast Asia,480,Warehouse,Electronic / DJ,140,30,54,sample
-static-hall-kul,Static Hall,Kuala Lumpur,MY,Southeast Asia,480,Bar stage,Electronic / DJ,490,30,54,sample
-basalt-lounge-kul,Basalt Lounge,Kuala Lumpur,MY,Southeast Asia,480,Warehouse,Electronic / DJ,1070,25,32,sample
-paper-parlor-kul,Paper Parlor,Kuala Lumpur,MY,Southeast Asia,480,Live house,Electronic / DJ,610,25,32,sample
-orbit-hangar-kul,Orbit Hangar,Kuala Lumpur,MY,Southeast Asia,480,Hall,Rock / Indie|Electronic / DJ,330,20,13,sample
-ivory-hall-kul,Ivory Hall,Kuala Lumpur,MY,Southeast Asia,480,Live house,Electronic / DJ,760,10,1,sample
-indigo-cellar-mnl,Indigo Cellar,Manila,PH,Southeast Asia,480,Live house,Pop / Hip-hop|Vocal / Soul,210,40,84,sample
-iron-lounge-mnl,Iron Lounge,Manila,PH,Southeast Asia,480,Live house,Rock / Indie,260,35,71,sample
-lumen-room-mnl,Lumen Room,Manila,PH,Southeast Asia,480,Warehouse,Pop / Hip-hop,390,35,71,sample
-slate-hangar-mnl,Slate Hangar,Manila,PH,Southeast Asia,480,Warehouse,Pop / Hip-hop,110,35,71,sample
-ember-loft-mnl,Ember Loft,Manila,PH,Southeast Asia,480,Warehouse,Pop / Hip-hop|Rock / Indie,480,25,32,sample
-indigo-room-mnl,Indigo Room,Manila,PH,Southeast Asia,480,Bar stage,Vocal / Soul,600,25,32,sample
-lumen-parlor-mnl,Lumen Parlor,Manila,PH,Southeast Asia,480,Live house,Vocal / Soul,320,10,1,sample
-tidal-annex-sin,Tidal Annex,Singapore,SG,Southeast Asia,480,Rooftop,Jazz|Vocal / Soul,510,45,91,sample
-halo-station-sin,Halo Station,Singapore,SG,Southeast Asia,480,Hall,Vocal / Soul,260,35,71,sample
-ivory-theater-sin,Ivory Theater,Singapore,SG,Southeast Asia,480,Hall,Jazz,1130,30,54,sample
-fog-station-sin,Fog Station,Singapore,SG,Southeast Asia,480,Rooftop,Electronic / DJ|Jazz,630,25,32,sample
-prism-works-sin,Prism Works,Singapore,SG,Southeast Asia,480,Rooftop,Jazz,130,25,32,sample
-cedar-loft-sin,Cedar Loft,Singapore,SG,Southeast Asia,480,Live house,Vocal / Soul,300,20,13,sample
-hazel-terrace-sin,Hazel Terrace,Singapore,SG,Southeast Asia,480,Club,Vocal / Soul,420,20,13,sample
+harbor-room,Harbor Room,Busan,KR,East Asia,540,Bar stage,Vocal / Soul|Jazz,250,25,11,sample
+demo-venue-166-sel,Demo Venue 166,Seoul,KR,East Asia,540,,Rock / Indie,400,50,98,discovery
+demo-venue-167-sel,Demo Venue 167,Seoul,KR,East Asia,540,,Rock / Indie,780,50,98,discovery
+blue-lantern,Blue Lantern Hall,Seoul,KR,East Asia,540,Live house,Rock / Indie|Electronic / DJ,500,45,95,sample
+demo-venue-168-sel,Demo Venue 168,Seoul,KR,East Asia,540,,Pop / Hip-hop,290,40,79,discovery
+demo-venue-169-sel,Demo Venue 169,Seoul,KR,East Asia,540,,Rock / Indie,180,40,79,discovery
+demo-venue-170-sel,Demo Venue 170,Seoul,KR,East Asia,540,,Rock / Indie,170,40,79,discovery
+demo-venue-171-sel,Demo Venue 171,Seoul,KR,East Asia,540,,Rock / Indie,430,40,79,discovery
+demo-venue-172-sel,Demo Venue 172,Seoul,KR,East Asia,540,,Electronic / DJ,760,40,79,discovery
+demo-venue-173-sel,Demo Venue 173,Seoul,KR,East Asia,540,,Electronic / DJ,290,30,37,discovery
+demo-venue-174-sel,Demo Venue 174,Seoul,KR,East Asia,540,,Electronic / DJ,690,30,37,discovery
+demo-venue-175-sel,Demo Venue 175,Seoul,KR,East Asia,540,,Electronic / DJ,500,30,37,discovery
+demo-venue-176-sel,Demo Venue 176,Seoul,KR,East Asia,540,,Vocal / Soul,420,30,37,discovery
+demo-venue-177-sel,Demo Venue 177,Seoul,KR,East Asia,540,,Electronic / DJ,430,30,37,discovery
+demo-venue-178-sel,Demo Venue 178,Seoul,KR,East Asia,540,,Electronic / DJ,320,30,37,discovery
+demo-venue-179-sel,Demo Venue 179,Seoul,KR,East Asia,540,,Vocal / Soul,180,30,37,discovery
+demo-venue-180-sel,Demo Venue 180,Seoul,KR,East Asia,540,,Electronic / DJ,340,30,37,discovery
+demo-venue-151-tyo,Demo Venue 151,Tokyo,JP,East Asia,540,,Jazz,690,50,98,discovery
+demo-venue-152-tyo,Demo Venue 152,Tokyo,JP,East Asia,540,,Rock / Indie,220,50,98,discovery
+demo-venue-153-tyo,Demo Venue 153,Tokyo,JP,East Asia,540,,Electronic / DJ,180,40,79,discovery
+demo-venue-154-tyo,Demo Venue 154,Tokyo,JP,East Asia,540,,Rock / Indie,120,40,79,discovery
+demo-venue-155-tyo,Demo Venue 155,Tokyo,JP,East Asia,540,,Vocal / Soul,510,40,79,discovery
+demo-venue-156-tyo,Demo Venue 156,Tokyo,JP,East Asia,540,,Electronic / DJ,200,40,79,discovery
+demo-venue-157-tyo,Demo Venue 157,Tokyo,JP,East Asia,540,,Rock / Indie,190,40,79,discovery
+demo-venue-158-tyo,Demo Venue 158,Tokyo,JP,East Asia,540,,Electronic / DJ,730,40,79,discovery
+demo-venue-159-tyo,Demo Venue 159,Tokyo,JP,East Asia,540,,Electronic / DJ,130,40,79,discovery
+demo-venue-160-tyo,Demo Venue 160,Tokyo,JP,East Asia,540,,Electronic / DJ,1120,40,79,discovery
+demo-venue-161-tyo,Demo Venue 161,Tokyo,JP,East Asia,540,,Electronic / DJ,600,40,79,discovery
+demo-venue-162-tyo,Demo Venue 162,Tokyo,JP,East Asia,540,,Rock / Indie,640,40,79,discovery
+demo-venue-163-tyo,Demo Venue 163,Tokyo,JP,East Asia,540,,Electronic / DJ,890,40,79,discovery
+demo-venue-164-tyo,Demo Venue 164,Tokyo,JP,East Asia,540,,Rock / Indie,730,40,79,discovery
+demo-venue-165-tyo,Demo Venue 165,Tokyo,JP,East Asia,540,,Rock / Indie,530,40,79,discovery
+grey-matter,Grey Matter,Tokyo,JP,East Asia,540,Club,Electronic / DJ|Techno / House,300,40,79,sample
+demo-venue-196-ams,Demo Venue 196,Amsterdam,NL,Europe,60,,Pop / Hip-hop,110,40,79,discovery
+demo-venue-197-ams,Demo Venue 197,Amsterdam,NL,Europe,60,,Pop / Hip-hop,220,40,79,discovery
+demo-venue-198-ams,Demo Venue 198,Amsterdam,NL,Europe,60,,Techno / House,300,30,37,discovery
+demo-venue-199-ams,Demo Venue 199,Amsterdam,NL,Europe,60,,Techno / House,230,30,37,discovery
+demo-venue-200-ams,Demo Venue 200,Amsterdam,NL,Europe,60,,Electronic / DJ,680,30,37,discovery
+demo-venue-201-ams,Demo Venue 201,Amsterdam,NL,Europe,60,,Rock / Indie,180,30,37,discovery
+demo-venue-202-ams,Demo Venue 202,Amsterdam,NL,Europe,60,,Electronic / DJ,570,30,37,discovery
+demo-venue-203-ams,Demo Venue 203,Amsterdam,NL,Europe,60,,Electronic / DJ,180,30,37,discovery
+demo-venue-204-ams,Demo Venue 204,Amsterdam,NL,Europe,60,,Electronic / DJ,170,30,37,discovery
+demo-venue-205-ams,Demo Venue 205,Amsterdam,NL,Europe,60,,Electronic / DJ,810,20,5,discovery
+demo-venue-206-ams,Demo Venue 206,Amsterdam,NL,Europe,60,,Pop / Hip-hop,550,20,5,discovery
+demo-venue-207-ams,Demo Venue 207,Amsterdam,NL,Europe,60,,Electronic / DJ,340,20,5,discovery
+demo-venue-208-ams,Demo Venue 208,Amsterdam,NL,Europe,60,,Rock / Indie,270,20,5,discovery
+demo-venue-209-ams,Demo Venue 209,Amsterdam,NL,Europe,60,,Electronic / DJ,520,20,5,discovery
+demo-venue-210-ams,Demo Venue 210,Amsterdam,NL,Europe,60,,Techno / House,330,20,5,discovery
+demo-venue-076-bcn,Demo Venue 076,Barcelona,ES,Europe,60,,Electronic / DJ,460,40,79,discovery
+demo-venue-077-bcn,Demo Venue 077,Barcelona,ES,Europe,60,,Electronic / DJ,340,30,37,discovery
+demo-venue-078-bcn,Demo Venue 078,Barcelona,ES,Europe,60,,Electronic / DJ,440,30,37,discovery
+demo-venue-079-bcn,Demo Venue 079,Barcelona,ES,Europe,60,,Techno / House,490,30,37,discovery
+demo-venue-080-bcn,Demo Venue 080,Barcelona,ES,Europe,60,,Electronic / DJ,450,30,37,discovery
+demo-venue-081-bcn,Demo Venue 081,Barcelona,ES,Europe,60,,Rock / Indie,440,30,37,discovery
+demo-venue-082-bcn,Demo Venue 082,Barcelona,ES,Europe,60,,Pop / Hip-hop,300,30,37,discovery
+demo-venue-083-bcn,Demo Venue 083,Barcelona,ES,Europe,60,,Rock / Indie,1270,30,37,discovery
+demo-venue-084-bcn,Demo Venue 084,Barcelona,ES,Europe,60,,Jazz,1140,30,37,discovery
+demo-venue-085-bcn,Demo Venue 085,Barcelona,ES,Europe,60,,Rock / Indie,480,20,5,discovery
+demo-venue-086-bcn,Demo Venue 086,Barcelona,ES,Europe,60,,Electronic / DJ,140,20,5,discovery
+demo-venue-087-bcn,Demo Venue 087,Barcelona,ES,Europe,60,,Rock / Indie,460,20,5,discovery
+demo-venue-088-bcn,Demo Venue 088,Barcelona,ES,Europe,60,,Electronic / DJ,310,20,5,discovery
+demo-venue-089-bcn,Demo Venue 089,Barcelona,ES,Europe,60,,Pop / Hip-hop,100,20,5,discovery
+demo-venue-090-bcn,Demo Venue 090,Barcelona,ES,Europe,60,,Rock / Indie,620,20,5,discovery
+demo-venue-061-ber,Demo Venue 061,Berlin,DE,Europe,60,,Rock / Indie,420,50,98,discovery
+demo-venue-062-ber,Demo Venue 062,Berlin,DE,Europe,60,,Electronic / DJ,310,40,79,discovery
+demo-venue-063-ber,Demo Venue 063,Berlin,DE,Europe,60,,Techno / House,660,40,79,discovery
+demo-venue-064-ber,Demo Venue 064,Berlin,DE,Europe,60,,Techno / House,120,40,79,discovery
+demo-venue-065-ber,Demo Venue 065,Berlin,DE,Europe,60,,Techno / House,580,40,79,discovery
+demo-venue-066-ber,Demo Venue 066,Berlin,DE,Europe,60,,Electronic / DJ,300,40,79,discovery
+demo-venue-067-ber,Demo Venue 067,Berlin,DE,Europe,60,,Electronic / DJ,210,40,79,discovery
+demo-venue-068-ber,Demo Venue 068,Berlin,DE,Europe,60,,Rock / Indie,300,30,37,discovery
+demo-venue-069-ber,Demo Venue 069,Berlin,DE,Europe,60,,Electronic / DJ,120,30,37,discovery
+demo-venue-070-ber,Demo Venue 070,Berlin,DE,Europe,60,,Rock / Indie,420,30,37,discovery
+demo-venue-071-ber,Demo Venue 071,Berlin,DE,Europe,60,,Electronic / DJ,750,30,37,discovery
+demo-venue-072-ber,Demo Venue 072,Berlin,DE,Europe,60,,Rock / Indie,750,30,37,discovery
+demo-venue-073-ber,Demo Venue 073,Berlin,DE,Europe,60,,Jazz,380,30,37,discovery
+demo-venue-074-ber,Demo Venue 074,Berlin,DE,Europe,60,,Techno / House,450,30,37,discovery
+demo-venue-075-ber,Demo Venue 075,Berlin,DE,Europe,60,,Electronic / DJ,220,30,37,discovery
+demo-venue-121-lon,Demo Venue 121,London,GB,Europe,0,,Jazz,650,40,79,discovery
+demo-venue-122-lon,Demo Venue 122,London,GB,Europe,0,,Rock / Indie,120,40,79,discovery
+demo-venue-123-lon,Demo Venue 123,London,GB,Europe,0,,Rock / Indie,180,40,79,discovery
+demo-venue-124-lon,Demo Venue 124,London,GB,Europe,0,,Rock / Indie,450,40,79,discovery
+demo-venue-125-lon,Demo Venue 125,London,GB,Europe,0,,Rock / Indie,320,40,79,discovery
+demo-venue-126-lon,Demo Venue 126,London,GB,Europe,0,,Electronic / DJ,340,40,79,discovery
+demo-venue-127-lon,Demo Venue 127,London,GB,Europe,0,,Rock / Indie,570,30,37,discovery
+demo-venue-128-lon,Demo Venue 128,London,GB,Europe,0,,Rock / Indie,410,30,37,discovery
+demo-venue-129-lon,Demo Venue 129,London,GB,Europe,0,,Rock / Indie,400,30,37,discovery
+demo-venue-130-lon,Demo Venue 130,London,GB,Europe,0,,Vocal / Soul,1090,30,37,discovery
+demo-venue-131-lon,Demo Venue 131,London,GB,Europe,0,,Jazz,210,30,37,discovery
+demo-venue-132-lon,Demo Venue 132,London,GB,Europe,0,,Electronic / DJ,340,30,37,discovery
+demo-venue-133-lon,Demo Venue 133,London,GB,Europe,0,,Vocal / Soul,880,30,37,discovery
+demo-venue-134-lon,Demo Venue 134,London,GB,Europe,0,,Rock / Indie,710,30,37,discovery
+demo-venue-135-lon,Demo Venue 135,London,GB,Europe,0,,Electronic / DJ,200,30,37,discovery
+demo-venue-091-mad,Demo Venue 091,Madrid,ES,Europe,60,,Rock / Indie,430,40,79,discovery
+demo-venue-092-mad,Demo Venue 092,Madrid,ES,Europe,60,,Electronic / DJ,590,40,79,discovery
+demo-venue-093-mad,Demo Venue 093,Madrid,ES,Europe,60,,Electronic / DJ,340,30,37,discovery
+demo-venue-094-mad,Demo Venue 094,Madrid,ES,Europe,60,,Rock / Indie,130,30,37,discovery
+demo-venue-095-mad,Demo Venue 095,Madrid,ES,Europe,60,,Rock / Indie,130,30,37,discovery
+demo-venue-096-mad,Demo Venue 096,Madrid,ES,Europe,60,,Electronic / DJ,190,30,37,discovery
+demo-venue-097-mad,Demo Venue 097,Madrid,ES,Europe,60,,Rock / Indie,200,30,37,discovery
+demo-venue-098-mad,Demo Venue 098,Madrid,ES,Europe,60,,Electronic / DJ,120,30,37,discovery
+demo-venue-099-mad,Demo Venue 099,Madrid,ES,Europe,60,,Electronic / DJ,210,30,37,discovery
+demo-venue-100-mad,Demo Venue 100,Madrid,ES,Europe,60,,Electronic / DJ,270,30,37,discovery
+demo-venue-101-mad,Demo Venue 101,Madrid,ES,Europe,60,,Rock / Indie,430,30,37,discovery
+demo-venue-102-mad,Demo Venue 102,Madrid,ES,Europe,60,,Electronic / DJ,220,30,37,discovery
+demo-venue-103-mad,Demo Venue 103,Madrid,ES,Europe,60,,Rock / Indie,910,20,5,discovery
+demo-venue-104-mad,Demo Venue 104,Madrid,ES,Europe,60,,Electronic / DJ,1130,20,5,discovery
+demo-venue-105-mad,Demo Venue 105,Madrid,ES,Europe,60,,Pop / Hip-hop,110,20,5,discovery
+demo-venue-136-mil,Demo Venue 136,Milan,IT,Europe,60,,Electronic / DJ,520,40,79,discovery
+demo-venue-137-mil,Demo Venue 137,Milan,IT,Europe,60,,Rock / Indie,300,40,79,discovery
+demo-venue-138-mil,Demo Venue 138,Milan,IT,Europe,60,,Rock / Indie,430,30,37,discovery
+demo-venue-139-mil,Demo Venue 139,Milan,IT,Europe,60,,Electronic / DJ,800,30,37,discovery
+demo-venue-140-mil,Demo Venue 140,Milan,IT,Europe,60,,Rock / Indie,320,30,37,discovery
+demo-venue-141-mil,Demo Venue 141,Milan,IT,Europe,60,,Rock / Indie,920,30,37,discovery
+demo-venue-142-mil,Demo Venue 142,Milan,IT,Europe,60,,Electronic / DJ,640,30,37,discovery
+demo-venue-143-mil,Demo Venue 143,Milan,IT,Europe,60,,Jazz,180,30,37,discovery
+demo-venue-144-mil,Demo Venue 144,Milan,IT,Europe,60,,Electronic / DJ,810,20,5,discovery
+demo-venue-145-mil,Demo Venue 145,Milan,IT,Europe,60,,Pop / Hip-hop,120,20,5,discovery
+demo-venue-146-mil,Demo Venue 146,Milan,IT,Europe,60,,Rock / Indie,190,20,5,discovery
+demo-venue-147-mil,Demo Venue 147,Milan,IT,Europe,60,,Electronic / DJ,510,20,5,discovery
+demo-venue-148-mil,Demo Venue 148,Milan,IT,Europe,60,,Rock / Indie,440,20,5,discovery
+demo-venue-149-mil,Demo Venue 149,Milan,IT,Europe,60,,Jazz,460,20,5,discovery
+demo-venue-150-mil,Demo Venue 150,Milan,IT,Europe,60,,Electronic / DJ,110,20,5,discovery
+demo-venue-106-par,Demo Venue 106,Paris,FR,Europe,60,,Pop / Hip-hop,420,40,79,discovery
+demo-venue-107-par,Demo Venue 107,Paris,FR,Europe,60,,Vocal / Soul,1080,40,79,discovery
+demo-venue-108-par,Demo Venue 108,Paris,FR,Europe,60,,Electronic / DJ,560,40,79,discovery
+demo-venue-109-par,Demo Venue 109,Paris,FR,Europe,60,,Vocal / Soul,120,40,79,discovery
+demo-venue-110-par,Demo Venue 110,Paris,FR,Europe,60,,Vocal / Soul,780,40,79,discovery
+demo-venue-111-par,Demo Venue 111,Paris,FR,Europe,60,,Rock / Indie,480,40,79,discovery
+demo-venue-112-par,Demo Venue 112,Paris,FR,Europe,60,,Electronic / DJ,300,40,79,discovery
+demo-venue-113-par,Demo Venue 113,Paris,FR,Europe,60,,Rock / Indie,770,40,79,discovery
+demo-venue-114-par,Demo Venue 114,Paris,FR,Europe,60,,Electronic / DJ,470,40,79,discovery
+demo-venue-115-par,Demo Venue 115,Paris,FR,Europe,60,,Electronic / DJ,520,40,79,discovery
+demo-venue-116-par,Demo Venue 116,Paris,FR,Europe,60,,Pop / Hip-hop,110,40,79,discovery
+demo-venue-117-par,Demo Venue 117,Paris,FR,Europe,60,,Electronic / DJ,180,40,79,discovery
+demo-venue-118-par,Demo Venue 118,Paris,FR,Europe,60,,Electronic / DJ,480,40,79,discovery
+demo-venue-119-par,Demo Venue 119,Paris,FR,Europe,60,,Jazz,550,40,79,discovery
+demo-venue-120-par,Demo Venue 120,Paris,FR,Europe,60,,Electronic / DJ,400,40,79,discovery
+demo-venue-181-mex,Demo Venue 181,Mexico City,MX,Latin America,-360,,Electronic / DJ,130,50,98,discovery
+demo-venue-182-mex,Demo Venue 182,Mexico City,MX,Latin America,-360,,Pop / Hip-hop,110,40,79,discovery
+demo-venue-183-mex,Demo Venue 183,Mexico City,MX,Latin America,-360,,Rock / Indie,820,40,79,discovery
+demo-venue-184-mex,Demo Venue 184,Mexico City,MX,Latin America,-360,,Rock / Indie,670,40,79,discovery
+demo-venue-185-mex,Demo Venue 185,Mexico City,MX,Latin America,-360,,Pop / Hip-hop,430,30,37,discovery
+demo-venue-186-mex,Demo Venue 186,Mexico City,MX,Latin America,-360,,Electronic / DJ,420,30,37,discovery
+demo-venue-187-mex,Demo Venue 187,Mexico City,MX,Latin America,-360,,Electronic / DJ,470,30,37,discovery
+demo-venue-188-mex,Demo Venue 188,Mexico City,MX,Latin America,-360,,Electronic / DJ,870,30,37,discovery
+demo-venue-189-mex,Demo Venue 189,Mexico City,MX,Latin America,-360,,Electronic / DJ,130,30,37,discovery
+demo-venue-190-mex,Demo Venue 190,Mexico City,MX,Latin America,-360,,Vocal / Soul,180,30,37,discovery
+demo-venue-191-mex,Demo Venue 191,Mexico City,MX,Latin America,-360,,Electronic / DJ,120,30,37,discovery
+demo-venue-192-mex,Demo Venue 192,Mexico City,MX,Latin America,-360,,Electronic / DJ,340,30,37,discovery
+demo-venue-193-mex,Demo Venue 193,Mexico City,MX,Latin America,-360,,Vocal / Soul,310,30,37,discovery
+demo-venue-194-mex,Demo Venue 194,Mexico City,MX,Latin America,-360,,Electronic / DJ,510,30,37,discovery
+demo-venue-195-mex,Demo Venue 195,Mexico City,MX,Latin America,-360,,Pop / Hip-hop,1290,20,5,discovery
+demo-venue-031-sao,Demo Venue 031,Sao Paulo,BR,Latin America,-180,,Rock / Indie,290,40,79,discovery
+demo-venue-032-sao,Demo Venue 032,Sao Paulo,BR,Latin America,-180,,Electronic / DJ,110,40,79,discovery
+demo-venue-033-sao,Demo Venue 033,Sao Paulo,BR,Latin America,-180,,Pop / Hip-hop,390,30,37,discovery
+demo-venue-034-sao,Demo Venue 034,Sao Paulo,BR,Latin America,-180,,Electronic / DJ,450,30,37,discovery
+demo-venue-035-sao,Demo Venue 035,Sao Paulo,BR,Latin America,-180,,Electronic / DJ,390,30,37,discovery
+demo-venue-036-sao,Demo Venue 036,Sao Paulo,BR,Latin America,-180,,Electronic / DJ,170,30,37,discovery
+demo-venue-037-sao,Demo Venue 037,Sao Paulo,BR,Latin America,-180,,Electronic / DJ,200,30,37,discovery
+demo-venue-038-sao,Demo Venue 038,Sao Paulo,BR,Latin America,-180,,Rock / Indie,270,30,37,discovery
+demo-venue-039-sao,Demo Venue 039,Sao Paulo,BR,Latin America,-180,,Electronic / DJ,110,30,37,discovery
+demo-venue-040-sao,Demo Venue 040,Sao Paulo,BR,Latin America,-180,,Rock / Indie,220,30,37,discovery
+demo-venue-041-sao,Demo Venue 041,Sao Paulo,BR,Latin America,-180,,Vocal / Soul,630,30,37,discovery
+demo-venue-042-sao,Demo Venue 042,Sao Paulo,BR,Latin America,-180,,Vocal / Soul,270,30,37,discovery
+demo-venue-043-sao,Demo Venue 043,Sao Paulo,BR,Latin America,-180,,Electronic / DJ,440,20,5,discovery
+demo-venue-044-sao,Demo Venue 044,Sao Paulo,BR,Latin America,-180,,Rock / Indie,100,20,5,discovery
+demo-venue-045-sao,Demo Venue 045,Sao Paulo,BR,Latin America,-180,,Pop / Hip-hop,190,20,5,discovery
+demo-venue-211-chi,Demo Venue 211,Chicago,US,North America,-360,,Rock / Indie,190,50,98,discovery
+demo-venue-212-chi,Demo Venue 212,Chicago,US,North America,-360,,Rock / Indie,300,50,98,discovery
+demo-venue-213-chi,Demo Venue 213,Chicago,US,North America,-360,,Vocal / Soul,120,40,79,discovery
+demo-venue-214-chi,Demo Venue 214,Chicago,US,North America,-360,,Rock / Indie,200,40,79,discovery
+demo-venue-215-chi,Demo Venue 215,Chicago,US,North America,-360,,Jazz,400,40,79,discovery
+demo-venue-216-chi,Demo Venue 216,Chicago,US,North America,-360,,Rock / Indie,1350,40,79,discovery
+demo-venue-217-chi,Demo Venue 217,Chicago,US,North America,-360,,Rock / Indie,120,40,79,discovery
+demo-venue-218-chi,Demo Venue 218,Chicago,US,North America,-360,,Rock / Indie,730,40,79,discovery
+demo-venue-219-chi,Demo Venue 219,Chicago,US,North America,-360,,Rock / Indie,1170,40,79,discovery
+demo-venue-220-chi,Demo Venue 220,Chicago,US,North America,-360,,Rock / Indie,420,30,37,discovery
+demo-venue-221-chi,Demo Venue 221,Chicago,US,North America,-360,,Rock / Indie,260,30,37,discovery
+demo-venue-222-chi,Demo Venue 222,Chicago,US,North America,-360,,Electronic / DJ,330,30,37,discovery
+demo-venue-223-chi,Demo Venue 223,Chicago,US,North America,-360,,Electronic / DJ,720,30,37,discovery
+demo-venue-224-chi,Demo Venue 224,Chicago,US,North America,-360,,Vocal / Soul,190,30,37,discovery
+demo-venue-225-chi,Demo Venue 225,Chicago,US,North America,-360,,Electronic / DJ,540,30,37,discovery
+demo-venue-226-dtw,Demo Venue 226,Detroit,US,North America,-300,,Rock / Indie,210,50,98,discovery
+demo-venue-227-dtw,Demo Venue 227,Detroit,US,North America,-300,,Electronic / DJ,540,40,79,discovery
+demo-venue-228-dtw,Demo Venue 228,Detroit,US,North America,-300,,Electronic / DJ,300,40,79,discovery
+demo-venue-229-dtw,Demo Venue 229,Detroit,US,North America,-300,,Pop / Hip-hop,320,40,79,discovery
+demo-venue-230-dtw,Demo Venue 230,Detroit,US,North America,-300,,Rock / Indie,710,30,37,discovery
+demo-venue-231-dtw,Demo Venue 231,Detroit,US,North America,-300,,Pop / Hip-hop,320,30,37,discovery
+demo-venue-232-dtw,Demo Venue 232,Detroit,US,North America,-300,,Electronic / DJ,660,30,37,discovery
+demo-venue-233-dtw,Demo Venue 233,Detroit,US,North America,-300,,Vocal / Soul,1340,30,37,discovery
+demo-venue-234-dtw,Demo Venue 234,Detroit,US,North America,-300,,Rock / Indie,620,30,37,discovery
+demo-venue-235-dtw,Demo Venue 235,Detroit,US,North America,-300,,Vocal / Soul,120,30,37,discovery
+demo-venue-236-dtw,Demo Venue 236,Detroit,US,North America,-300,,Electronic / DJ,800,30,37,discovery
+demo-venue-237-dtw,Demo Venue 237,Detroit,US,North America,-300,,Electronic / DJ,680,30,37,discovery
+demo-venue-238-dtw,Demo Venue 238,Detroit,US,North America,-300,,Vocal / Soul,170,30,37,discovery
+demo-venue-239-dtw,Demo Venue 239,Detroit,US,North America,-300,,Vocal / Soul,280,30,37,discovery
+demo-venue-240-dtw,Demo Venue 240,Detroit,US,North America,-300,,Vocal / Soul,230,30,37,discovery
+demo-venue-241-lax,Demo Venue 241,Los Angeles,US,North America,-480,,Rock / Indie,580,50,98,discovery
+demo-venue-242-lax,Demo Venue 242,Los Angeles,US,North America,-480,,Rock / Indie,340,40,79,discovery
+demo-venue-243-lax,Demo Venue 243,Los Angeles,US,North America,-480,,Rock / Indie,570,40,79,discovery
+demo-venue-244-lax,Demo Venue 244,Los Angeles,US,North America,-480,,Electronic / DJ,540,40,79,discovery
+demo-venue-245-lax,Demo Venue 245,Los Angeles,US,North America,-480,,Rock / Indie,1150,40,79,discovery
+demo-venue-246-lax,Demo Venue 246,Los Angeles,US,North America,-480,,Electronic / DJ,680,30,37,discovery
+demo-venue-247-lax,Demo Venue 247,Los Angeles,US,North America,-480,,Pop / Hip-hop,210,30,37,discovery
+demo-venue-248-lax,Demo Venue 248,Los Angeles,US,North America,-480,,Rock / Indie,1070,30,37,discovery
+demo-venue-249-lax,Demo Venue 249,Los Angeles,US,North America,-480,,Vocal / Soul,300,30,37,discovery
+demo-venue-250-lax,Demo Venue 250,Los Angeles,US,North America,-480,,Electronic / DJ,190,30,37,discovery
+demo-venue-251-lax,Demo Venue 251,Los Angeles,US,North America,-480,,Vocal / Soul,650,30,37,discovery
+demo-venue-252-lax,Demo Venue 252,Los Angeles,US,North America,-480,,Electronic / DJ,180,30,37,discovery
+demo-venue-253-lax,Demo Venue 253,Los Angeles,US,North America,-480,,Electronic / DJ,410,30,37,discovery
+demo-venue-254-lax,Demo Venue 254,Los Angeles,US,North America,-480,,Rock / Indie,440,30,37,discovery
+demo-venue-255-lax,Demo Venue 255,Los Angeles,US,North America,-480,,Rock / Indie,700,30,37,discovery
+demo-venue-256-mia,Demo Venue 256,Miami,US,North America,-300,,Pop / Hip-hop,110,40,79,discovery
+demo-venue-257-mia,Demo Venue 257,Miami,US,North America,-300,,Electronic / DJ,430,30,37,discovery
+demo-venue-258-mia,Demo Venue 258,Miami,US,North America,-300,,Techno / House,290,30,37,discovery
+demo-venue-259-mia,Demo Venue 259,Miami,US,North America,-300,,Rock / Indie,390,30,37,discovery
+demo-venue-260-mia,Demo Venue 260,Miami,US,North America,-300,,Electronic / DJ,420,30,37,discovery
+demo-venue-261-mia,Demo Venue 261,Miami,US,North America,-300,,Vocal / Soul,170,30,37,discovery
+demo-venue-262-mia,Demo Venue 262,Miami,US,North America,-300,,Electronic / DJ,570,30,37,discovery
+demo-venue-263-mia,Demo Venue 263,Miami,US,North America,-300,,Pop / Hip-hop,740,30,37,discovery
+demo-venue-264-mia,Demo Venue 264,Miami,US,North America,-300,,Electronic / DJ,270,30,37,discovery
+demo-venue-265-mia,Demo Venue 265,Miami,US,North America,-300,,Vocal / Soul,280,30,37,discovery
+demo-venue-266-mia,Demo Venue 266,Miami,US,North America,-300,,Rock / Indie,510,30,37,discovery
+demo-venue-267-mia,Demo Venue 267,Miami,US,North America,-300,,Rock / Indie,790,20,5,discovery
+demo-venue-268-mia,Demo Venue 268,Miami,US,North America,-300,,Open format / EDM,1080,20,5,discovery
+demo-venue-269-mia,Demo Venue 269,Miami,US,North America,-300,,Jazz,310,20,5,discovery
+demo-venue-270-mia,Demo Venue 270,Miami,US,North America,-300,,Electronic / DJ,120,20,5,discovery
+demo-venue-271-nyc,Demo Venue 271,New York City,US,North America,-300,,Rock / Indie,1190,40,79,discovery
+demo-venue-272-nyc,Demo Venue 272,New York City,US,North America,-300,,Pop / Hip-hop,190,40,79,discovery
+demo-venue-273-nyc,Demo Venue 273,New York City,US,North America,-300,,Rock / Indie,210,40,79,discovery
+demo-venue-274-nyc,Demo Venue 274,New York City,US,North America,-300,,Rock / Indie,470,40,79,discovery
+demo-venue-275-nyc,Demo Venue 275,New York City,US,North America,-300,,Rock / Indie,670,30,37,discovery
+demo-venue-276-nyc,Demo Venue 276,New York City,US,North America,-300,,Electronic / DJ,630,30,37,discovery
+demo-venue-277-nyc,Demo Venue 277,New York City,US,North America,-300,,Rock / Indie,820,30,37,discovery
+demo-venue-278-nyc,Demo Venue 278,New York City,US,North America,-300,,Rock / Indie,640,30,37,discovery
+demo-venue-279-nyc,Demo Venue 279,New York City,US,North America,-300,,Rock / Indie,590,30,37,discovery
+demo-venue-280-nyc,Demo Venue 280,New York City,US,North America,-300,,Vocal / Soul,110,30,37,discovery
+demo-venue-281-nyc,Demo Venue 281,New York City,US,North America,-300,,Electronic / DJ,510,30,37,discovery
+demo-venue-282-nyc,Demo Venue 282,New York City,US,North America,-300,,Rock / Indie,340,30,37,discovery
+demo-venue-283-nyc,Demo Venue 283,New York City,US,North America,-300,,Electronic / DJ,440,30,37,discovery
+demo-venue-284-nyc,Demo Venue 284,New York City,US,North America,-300,,Electronic / DJ,310,30,37,discovery
+demo-venue-285-nyc,Demo Venue 285,New York City,US,North America,-300,,Rock / Indie,180,30,37,discovery
+demo-venue-286-sfo,Demo Venue 286,San Francisco/Oakland,US,North America,-480,,Rock / Indie,400,40,79,discovery
+demo-venue-287-sfo,Demo Venue 287,San Francisco/Oakland,US,North America,-480,,Rock / Indie,510,40,79,discovery
+demo-venue-288-sfo,Demo Venue 288,San Francisco/Oakland,US,North America,-480,,Vocal / Soul,420,40,79,discovery
+demo-venue-289-sfo,Demo Venue 289,San Francisco/Oakland,US,North America,-480,,Rock / Indie,540,40,79,discovery
+demo-venue-290-sfo,Demo Venue 290,San Francisco/Oakland,US,North America,-480,,Rock / Indie,510,40,79,discovery
+demo-venue-291-sfo,Demo Venue 291,San Francisco/Oakland,US,North America,-480,,Rock / Indie,310,30,37,discovery
+demo-venue-292-sfo,Demo Venue 292,San Francisco/Oakland,US,North America,-480,,Electronic / DJ,130,30,37,discovery
+demo-venue-293-sfo,Demo Venue 293,San Francisco/Oakland,US,North America,-480,,Electronic / DJ,730,30,37,discovery
+demo-venue-294-sfo,Demo Venue 294,San Francisco/Oakland,US,North America,-480,,Rock / Indie,520,30,37,discovery
+demo-venue-295-sfo,Demo Venue 295,San Francisco/Oakland,US,North America,-480,,Electronic / DJ,190,30,37,discovery
+demo-venue-296-sfo,Demo Venue 296,San Francisco/Oakland,US,North America,-480,,Rock / Indie,400,30,37,discovery
+demo-venue-297-sfo,Demo Venue 297,San Francisco/Oakland,US,North America,-480,,Electronic / DJ,180,30,37,discovery
+demo-venue-298-sfo,Demo Venue 298,San Francisco/Oakland,US,North America,-480,,Vocal / Soul,110,30,37,discovery
+demo-venue-299-sfo,Demo Venue 299,San Francisco/Oakland,US,North America,-480,,Electronic / DJ,110,30,37,discovery
+demo-venue-300-sfo,Demo Venue 300,San Francisco/Oakland,US,North America,-480,,Rock / Indie,130,30,37,discovery
+demo-venue-046-yyz,Demo Venue 046,Toronto,CA,North America,-300,,Rock / Indie,120,50,98,discovery
+demo-venue-047-yyz,Demo Venue 047,Toronto,CA,North America,-300,,Vocal / Soul,750,50,98,discovery
+demo-venue-048-yyz,Demo Venue 048,Toronto,CA,North America,-300,,Electronic / DJ,850,50,98,discovery
+demo-venue-049-yyz,Demo Venue 049,Toronto,CA,North America,-300,,Vocal / Soul,330,40,79,discovery
+demo-venue-050-yyz,Demo Venue 050,Toronto,CA,North America,-300,,Pop / Hip-hop,300,40,79,discovery
+demo-venue-051-yyz,Demo Venue 051,Toronto,CA,North America,-300,,Vocal / Soul,430,40,79,discovery
+demo-venue-052-yyz,Demo Venue 052,Toronto,CA,North America,-300,,Rock / Indie,120,40,79,discovery
+demo-venue-053-yyz,Demo Venue 053,Toronto,CA,North America,-300,,Electronic / DJ,470,40,79,discovery
+demo-venue-054-yyz,Demo Venue 054,Toronto,CA,North America,-300,,Jazz,190,40,79,discovery
+demo-venue-055-yyz,Demo Venue 055,Toronto,CA,North America,-300,,Electronic / DJ,170,40,79,discovery
+demo-venue-056-yyz,Demo Venue 056,Toronto,CA,North America,-300,,Rock / Indie,290,40,79,discovery
+demo-venue-057-yyz,Demo Venue 057,Toronto,CA,North America,-300,,Rock / Indie,280,40,79,discovery
+demo-venue-058-yyz,Demo Venue 058,Toronto,CA,North America,-300,,Jazz,860,40,79,discovery
+demo-venue-059-yyz,Demo Venue 059,Toronto,CA,North America,-300,,Jazz,210,40,79,discovery
+demo-venue-060-yyz,Demo Venue 060,Toronto,CA,North America,-300,,Electronic / DJ,310,30,37,discovery
+demo-venue-001-mel,Demo Venue 001,Melbourne,AU,Oceania,660,,Vocal / Soul,110,40,79,discovery
+demo-venue-002-mel,Demo Venue 002,Melbourne,AU,Oceania,660,,Rock / Indie,190,30,37,discovery
+demo-venue-003-mel,Demo Venue 003,Melbourne,AU,Oceania,660,,Jazz,400,30,37,discovery
+demo-venue-004-mel,Demo Venue 004,Melbourne,AU,Oceania,660,,Rock / Indie,280,30,37,discovery
+demo-venue-005-mel,Demo Venue 005,Melbourne,AU,Oceania,660,,Rock / Indie,210,30,37,discovery
+demo-venue-006-mel,Demo Venue 006,Melbourne,AU,Oceania,660,,Rock / Indie,290,30,37,discovery
+demo-venue-007-mel,Demo Venue 007,Melbourne,AU,Oceania,660,,Electronic / DJ,300,30,37,discovery
+demo-venue-008-mel,Demo Venue 008,Melbourne,AU,Oceania,660,,Electronic / DJ,780,30,37,discovery
+demo-venue-009-mel,Demo Venue 009,Melbourne,AU,Oceania,660,,Electronic / DJ,130,30,37,discovery
+demo-venue-010-mel,Demo Venue 010,Melbourne,AU,Oceania,660,,Rock / Indie,720,30,37,discovery
+demo-venue-011-mel,Demo Venue 011,Melbourne,AU,Oceania,660,,Rock / Indie,480,30,37,discovery
+demo-venue-012-mel,Demo Venue 012,Melbourne,AU,Oceania,660,,Jazz,180,30,37,discovery
+demo-venue-013-mel,Demo Venue 013,Melbourne,AU,Oceania,660,,Vocal / Soul,220,30,37,discovery
+demo-venue-014-mel,Demo Venue 014,Melbourne,AU,Oceania,660,,Rock / Indie,190,30,37,discovery
+demo-venue-015-mel,Demo Venue 015,Melbourne,AU,Oceania,660,,Electronic / DJ,460,30,37,discovery
+demo-venue-016-syd,Demo Venue 016,Sydney,AU,Oceania,660,,Rock / Indie,130,50,98,discovery
+demo-venue-017-syd,Demo Venue 017,Sydney,AU,Oceania,660,,Rock / Indie,110,40,79,discovery
+demo-venue-018-syd,Demo Venue 018,Sydney,AU,Oceania,660,,Vocal / Soul,280,30,37,discovery
+demo-venue-019-syd,Demo Venue 019,Sydney,AU,Oceania,660,,Vocal / Soul,220,30,37,discovery
+demo-venue-020-syd,Demo Venue 020,Sydney,AU,Oceania,660,,Electronic / DJ,480,30,37,discovery
+demo-venue-021-syd,Demo Venue 021,Sydney,AU,Oceania,660,,Electronic / DJ,500,30,37,discovery
+demo-venue-022-syd,Demo Venue 022,Sydney,AU,Oceania,660,,Electronic / DJ,120,30,37,discovery
+demo-venue-023-syd,Demo Venue 023,Sydney,AU,Oceania,660,,Electronic / DJ,1250,30,37,discovery
+demo-venue-024-syd,Demo Venue 024,Sydney,AU,Oceania,660,,Electronic / DJ,420,30,37,discovery
+demo-venue-025-syd,Demo Venue 025,Sydney,AU,Oceania,660,,Jazz,130,30,37,discovery
+demo-venue-026-syd,Demo Venue 026,Sydney,AU,Oceania,660,,Electronic / DJ,260,30,37,discovery
+demo-venue-027-syd,Demo Venue 027,Sydney,AU,Oceania,660,,Rock / Indie,510,30,37,discovery
+demo-venue-028-syd,Demo Venue 028,Sydney,AU,Oceania,660,,Pop / Hip-hop,430,20,5,discovery
+demo-venue-029-syd,Demo Venue 029,Sydney,AU,Oceania,660,,Electronic / DJ,190,20,5,discovery
+demo-venue-030-syd,Demo Venue 030,Sydney,AU,Oceania,660,,Electronic / DJ,890,20,5,discovery

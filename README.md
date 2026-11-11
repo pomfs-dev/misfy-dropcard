@@ -73,11 +73,13 @@ The scout searches [`data/venue_directory.csv`](data/venue_directory.csv), built
   venue's calendar has been, not how popular it is right now, and the scout says so.
 - Genres are broad categories (Electronic / DJ, Rock / Indie, Vocal / Soul, Pop / Hip-hop, Jazz, Techno / House); the
   scout maps an artist's genre to the closest one.
-- The bundled file is **fictional sample data** (`python3 scripts/venue_directory.py sample`).
-  `python3 scripts/venue_directory.py import EXPORT.csv` prepares a discovery export instead: it keeps pseudonymized
-  names, refuses exports with real venue names, drops other identifying columns, rounds show counts and makes up
-  rooms and prices (which a discovery export does not have). `VENUE_DIRECTORY_CSV=path` loads a file that stays out
-  of the repository.
+- The bundled file holds **300 venues in 20 cities from MiSFY's discovery data, pseudonymized**: city, country, genre
+  category and shows on record come from the data (names are pseudonyms such as "Demo Venue 151", show counts are
+  rounded to tens and capped at 50); rooms, capacity and prices are made up for the demo, because the data has none.
+  The three hand-made sample venue cards (Blue Lantern Hall, Harbor Room, Grey Matter) are fictional.
+- `python3 scripts/venue_directory.py import EXPORT.csv` rebuilds it from a pseudonymized export (exports with real
+  venue names are refused; other identifying columns are dropped). `python3 scripts/venue_directory.py sample` builds a
+  fully fictional directory instead, and `VENUE_DIRECTORY_CSV=path` loads a file that stays out of the repository.
 
 ## How the money stays correct
 
@@ -183,7 +185,7 @@ src/
   directory.rs     the venue directory the scout searches
   agent/           Claude agents: API client, tools, conversation loop
   routes/          HTTP handlers
-data/              venue directory (fictional sample)
+data/              venue directory (pseudonymized discovery data)
 scripts/           venue directory builder
 migrations/        schema and sample-data generator
 web/               frontend (React, Bryntum Scheduler Pro, AG Grid, PayPal JS SDK)
