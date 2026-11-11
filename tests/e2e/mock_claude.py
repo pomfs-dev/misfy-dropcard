@@ -38,18 +38,31 @@ def text(t):
 def respond(body):
     msgs = body["messages"]
     last = msgs[-1]["content"]
+    scout = "AI venue scout" in json.dumps(body["system"])
+    today = datetime.date.today()
+    window = {"from_date": str(today + datetime.timedelta(days=1)), "to_date": str(today + datetime.timedelta(days=40)),
+              "weekdays": ["Fri"]}
     if last and last[0].get("type") == "tool_result":
         prev = msgs[-2]["content"]
         tu = next(b for b in prev if b["type"] == "tool_use")
         raw = last[0]["content"]
         result = json.loads(raw) if raw.startswith("{") else {"raw": raw}
+        if tu["name"] == "search_venues":
+            venues = result.get("venues", [])
+            if not venues:
+                return text("(mock) No venue found.")
+            return tool_use("check_availability", {"venue": venues[0]["venue"], **window, "headcount": 150})
         if tu["name"] == "check_availability":
             slots = result.get("slots", [])[:2]
             if not slots:
                 return text("(mock) No open Friday found.")
-            return tool_use("propose_slots", {
-                "title": "Synthwave Night", "genre": "Synthwave", "headcount": 300, "artist": "Hollow Arcade",
-                "slots": [{"space": s["space"], "date": s["date"], "start_time": "19:00", "hours": 4} for s in slots]})
+            proposal = {"title": "Synthwave Night", "genre": "Synthwave",
+                        "slots": [{"space": s["space"], "date": s["date"], "start_time": "19:00", "hours": 4} for s in slots]}
+            if scout:
+                proposal.update({"venue": result["venue"], "headcount": 150})
+            else:
+                proposal.update({"headcount": 300, "artist": "Hollow Arcade"})
+            return tool_use("propose_slots", proposal)
         flag = " (is_error)" if last[0].get("is_error") else ""
         return text(f"(mock) {tu['name']}{flag}: {json.dumps(result)[:300]}")
     context = last[0]["text"]
@@ -57,13 +70,12 @@ def respond(body):
     if "pay" in user:
         m = re.search(r"This conversation's booking: .*?" + UUID_RE, context)
         return tool_use("create_deposit_order", {"booking_id": m.group(1)}) if m else text("(mock) no booking yet")
-    if "book" in user:
+    if "book" in user or "send" in user:
         m = re.search(r"Open proposals: .*?" + UUID_RE, context)
         return tool_use("request_booking", {"booking_id": m.group(1), "inquiry_text": "Synthwave night, ~300 guests, needs a DJ booth."}) if m else text("(mock) no proposal")
-    today = datetime.date.today()
-    return tool_use("check_availability", {"from_date": str(today + datetime.timedelta(days=1)),
-                                           "to_date": str(today + datetime.timedelta(days=40)),
-                                           "weekdays": ["Fri"], "headcount": 300})
+    if scout:
+        return tool_use("search_venues", {"place": "Tokyo", "genre": "Electronic", "min_capacity": 150})
+    return tool_use("check_availability", {**window, "headcount": 300})
 
 
 class Handler(http.server.BaseHTTPRequestHandler):

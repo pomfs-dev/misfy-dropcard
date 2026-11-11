@@ -1,15 +1,22 @@
 import { Fragment, useEffect, useRef, useState, type FormEvent, type KeyboardEvent } from "react";
 import { api, ApiError, errorMessage } from "../../api/client";
-import type { Booking, BookingSummary, ChatTurn, ToolCall } from "../../api/types";
+import type { Booking, BookingSummary, ChatTurn, ToolCall, VenueHit } from "../../api/types";
 import { IconBlock, IconCheck, IconSend, IconSpark, IconX } from "../../components/icons";
 import { Spinner } from "../../components/ui";
 import { localId, useChatStore, type UiMessage } from "../../lib/chatStore";
+import { VenueHitCard } from "../scout/VenueHitCard";
 import { SlotCard } from "./SlotCard";
 
 export const SUGGESTED_PROMPTS = [
   "A Friday night in December for about 300 people — synthwave",
   "Cheapest Saturday this month for ~100 guests",
   "Is the Rooftop free next weekend for 150 people?",
+];
+
+export const SCOUT_PROMPTS = [
+  "The busiest venues in Tokyo for a synthwave show, about 200 people",
+  "Find a venue in Berlin for ~300 people on a Friday in December and send the proposal for the best date",
+  "Which European city has the most active venues for electronic music?",
 ];
 
 const AGENT_TOOLS = [
@@ -21,11 +28,25 @@ const AGENT_TOOLS = [
   "create_deposit_order",
 ];
 
+const SCOUT_TOOLS = [
+  "search_venues",
+  "check_availability",
+  "propose_slots",
+  "request_booking",
+  "get_booking_status",
+  "create_deposit_order",
+];
+
+/** A venue's booking concierge, or the AI venue scout that works for an artist across every venue. */
+export type ChatMode =
+  | { kind: "venue"; slug: string; tz: number; city: string | null; venueName: string }
+  | { kind: "scout"; artist: string; artistName: string };
+
+/** Chat-store key of the scout conversation for one artist. */
+export const scoutKey = (artist: string) => `scout.${artist}`;
+
 type Props = {
-  slug: string;
-  tz: number;
-  city: string | null;
-  venueName: string;
+  mode: ChatMode;
   /** after every chat turn (refetch the schedule, highlight proposals) */
   onTurn: (turn: ChatTurn) => void;
   /** after "Request this slot" */
@@ -113,26 +134,38 @@ function ToolChips({ calls }: { calls: ToolCall[] }) {
 }
 
 /** A turn takes 10–40 s with the real model: say what is happening and how long it has taken. */
-function Working() {
+function Working({ scout }: { scout: boolean }) {
   const [secs, setSecs] = useState(0);
   useEffect(() => {
     const started = Date.now();
     const t = setInterval(() => setSecs(Math.floor((Date.now() - started) / 1000)), 1000);
     return () => clearInterval(t);
   }, []);
-  const step = secs < 8 ? "Checking availability across every space…" : secs < 20 ? "Comparing dates and prices…" : "Drafting the proposal…";
+  const step = scout
+    ? secs < 8
+      ? "Searching the venue directory…"
+      : secs < 20
+        ? "Checking dates at the venue…"
+        : "Writing the proposal…"
+    : secs < 8
+      ? "Checking availability across every space…"
+      : secs < 20
+        ? "Comparing dates and prices…"
+        : "Drafting the proposal…";
   return (
     <div className="msg msg--assistant">
       <div className="msg__bubble msg__bubble--typing">
         <Spinner label={step} />
         <span className="msg__elapsed">{secs}s</span>
       </div>
-      {secs >= 12 && <p className="muted small">The concierge can take up to 40 seconds for a turn.</p>}
+      {secs >= 12 && <p className="muted small">The AI can take up to 40 seconds for a turn.</p>}
     </div>
   );
 }
 
-export function ConciergeChat({ slug, tz, city, venueName, onTurn, onBooking }: Props) {
+export function ConciergeChat({ mode, onTurn, onBooking }: Props) {
+  const scout = mode.kind === "scout";
+  const slug = mode.kind === "venue" ? mode.slug : scoutKey(mode.artist);
   const store = useChatStore();
   const conv = store.get(slug);
   const [input, setInput] = useState("");
@@ -212,11 +245,11 @@ export function ConciergeChat({ slug, tz, city, venueName, onTurn, onBooking }: 
     setInput("");
     setSending(true);
     try {
-      const turn = await api.chat({
-        venue_slug: slug,
-        conversation_id: conv.conversationId ?? undefined,
-        message,
-      });
+      const turn = await api.chat(
+        mode.kind === "venue"
+          ? { venue_slug: mode.slug, conversation_id: conv.conversationId ?? undefined, message }
+          : { artist: mode.artist, conversation_id: conv.conversationId ?? undefined, message },
+      );
       setNotLive(false);
       const reply: UiMessage = {
         id: localId(),
@@ -225,6 +258,7 @@ export function ConciergeChat({ slug, tz, city, venueName, onTurn, onBooking }: 
         at: new Date().toISOString(),
         toolCalls: turn.tool_calls,
         proposals: turn.proposals,
+        venues: turn.venues,
         limited: turn.limited,
       };
       store.update(slug, (c) => ({
@@ -234,6 +268,11 @@ export function ConciergeChat({ slug, tz, city, venueName, onTurn, onBooking }: 
         freshProposalIds: turn.proposals.map((p) => p.id),
         messages: [...c.messages, reply],
       }));
+      // The scout books at another venue: keep the booking there too, so that venue's card shows "Your booking".
+      if (scout && turn.booking) {
+        const b = turn.booking;
+        store.update(b.venue_slug, (c) => ({ ...c, booking: b }));
+      }
       onTurn(turn);
       if (turn.booking) onBooking(turn.booking);
     } catch (e) {
@@ -244,13 +283,13 @@ export function ConciergeChat({ slug, tz, city, venueName, onTurn, onBooking }: 
       const staleConversation = e instanceof ApiError && e.notFound && !!conv.conversationId;
       if (staleConversation) store.update(slug, (c) => ({ ...c, conversationId: null }));
       const why = notFound
-        ? "The AI concierge is not live on this server yet."
+        ? "The AI agent is not live on this server yet."
         : staleConversation
           ? "That conversation no longer exists. Send your message again to start a new one."
           : unavailable
-          ? "Not sent: the concierge is offline."
+          ? "Not sent: the AI is offline."
           : e instanceof ApiError && e.status === 409
-            ? "The concierge is still answering your previous message. Wait for the reply, then try again."
+            ? "The AI is still answering your previous message. Wait for the reply, then try again."
             : errorMessage(e);
       store.update(slug, (c) => ({
         ...c,
@@ -265,8 +304,11 @@ export function ConciergeChat({ slug, tz, city, venueName, onTurn, onBooking }: 
   const requestSlot = async (p: BookingSummary) => {
     const b = await api.requestBooking(p.id);
     store.update(slug, (c) => ({ ...c, booking: b }));
+    if (scout) store.update(b.venue_slug, (c) => ({ ...c, booking: b }));
     onBooking(b);
   };
+
+  const askAbout = (v: VenueHit) => void send(`Check open dates at ${v.name} for my show.`);
 
   const onSubmit = (e: FormEvent) => {
     e.preventDefault();
@@ -280,18 +322,25 @@ export function ConciergeChat({ slug, tz, city, venueName, onTurn, onBooking }: 
   };
 
   const empty = conv.messages.length === 0;
+  const title = scout ? "AI venue scout" : "AI booking concierge";
+  const prompts = scout ? SCOUT_PROMPTS : SUGGESTED_PROMPTS;
+  const tools = scout ? SCOUT_TOOLS : AGENT_TOOLS;
 
   return (
-    <section className="card chat" aria-label="AI booking concierge">
+    <section className={`card chat${scout ? " chat--scout" : ""}`} aria-label={title}>
       <header className="card__head chat__head">
         <div>
           <h2 className="card__title">
             <span className="chat__badge" aria-hidden>
               <IconSpark size={15} />
             </span>
-            AI booking concierge
+            {title}
           </h2>
-          <p className="card__subtitle">Ask for a date. The agent checks every space at {venueName} and proposes open slots.</p>
+          <p className="card__subtitle">
+            {mode.kind === "venue"
+              ? `Ask for a date. The agent checks every space at ${mode.venueName} and proposes open slots.`
+              : `Working for ${mode.artistName}. It finds the most active venues, checks their dates and writes your proposal to the venue.`}
+          </p>
         </div>
         {!empty && (!conv.booking || conv.booking.status === "cancelled") && (
           <button
@@ -309,10 +358,14 @@ export function ConciergeChat({ slug, tz, city, venueName, onTurn, onBooking }: 
       <div className="chat__list" ref={listRef} aria-live="polite">
         {empty && !restoring && (
           <div className="chat__intro">
-            <p className="chat__hello">Hi! I can find an open date, quote it and send the inquiry to the venue.</p>
+            <p className="chat__hello">
+              {scout
+                ? "Hi! Tell me where you want to play. I find the venues with the busiest calendars, check their dates and send the proposal for you."
+                : "Hi! I can find an open date, quote it and send the inquiry to the venue."}
+            </p>
             <p className="muted small">Try one of these:</p>
             <div className="prompts">
-              {SUGGESTED_PROMPTS.map((p) => (
+              {prompts.map((p) => (
                 <button type="button" key={p} className="prompt" onClick={() => void send(p)} disabled={sending}>
                   {p}
                 </button>
@@ -320,7 +373,7 @@ export function ConciergeChat({ slug, tz, city, venueName, onTurn, onBooking }: 
             </div>
             <div className="agent-tools" aria-label="The agent's tools">
               <span className="agent-tools__label">Agent tools</span>
-              {AGENT_TOOLS.map((t) => (
+              {tools.map((t) => (
                 <code key={t} className={`agent-tools__tool${t === "create_deposit_order" ? " is-locked" : ""}`}>
                   {t}
                 </code>
@@ -352,34 +405,49 @@ export function ConciergeChat({ slug, tz, city, venueName, onTurn, onBooking }: 
             <div className={`msg msg--assistant${m.limited ? " msg--limited" : ""}`} key={m.id} data-msg={m.id}>
               {m.limited && (
                 <div className="msg__limited">
-                  <strong>Daily AI limit reached.</strong> The concierge is paused to keep the demo safe.
+                  <strong>Daily AI limit reached.</strong> The AI is paused to keep the demo safe. The booking form on every venue card still works.
                 </div>
               )}
               {m.toolCalls && <ToolChips calls={m.toolCalls} />}
               <div className="msg__bubble">
                 <ReplyText text={m.text} />
               </div>
+              {m.venues && m.venues.length > 0 && (
+                <div className="vhits">
+                  {m.venues.map((v, i) => (
+                    <VenueHitCard key={v.slug} v={v} rank={i + 1} onAsk={askAbout} busy={sending} />
+                  ))}
+                </div>
+              )}
               {m.proposals && m.proposals.length > 0 && (
                 <div className="slots">
                   {m.proposals.map((p) => (
-                    <SlotCard key={p.id} p={p} tz={tz} city={city} booking={conv.booking} onRequest={requestSlot} />
+                    <SlotCard
+                      key={p.id}
+                      p={p}
+                      tz={mode.kind === "venue" ? mode.tz : p.venue_tz}
+                      city={mode.kind === "venue" ? mode.city : null}
+                      booking={conv.booking}
+                      onRequest={requestSlot}
+                      showVenue={scout}
+                    />
                   ))}
                 </div>
               )}
             </div>
           ),
         )}
-        {sending && <Working />}
+        {sending && <Working scout={scout} />}
       </div>
 
       {notLive && (
         <p className="chat__notlive">
-          The concierge endpoint <code>POST /api/agent/chat</code> is still being built on this server.
+          The AI endpoint <code>POST /api/agent/chat</code> is still being built on this server.
         </p>
       )}
       {offline && !notLive && (
         <p className="chat__notlive" role="status">
-          {offline} You can still browse availability below.
+          {offline} {scout ? "You can still book with the form on any venue card." : "You can still browse availability below."}
         </p>
       )}
 
@@ -389,10 +457,18 @@ export function ConciergeChat({ slug, tz, city, venueName, onTurn, onBooking }: 
           className="composer__input"
           rows={1}
           value={input}
-          placeholder={narrow ? "Date, crowd size, genre…" : "Describe your show: date, crowd size, genre…"}
+          placeholder={
+            scout
+              ? narrow
+                ? "Where, when, how many…"
+                : "Where do you want to play? City, dates, crowd size…"
+              : narrow
+                ? "Date, crowd size, genre…"
+                : "Describe your show: date, crowd size, genre…"
+          }
           onChange={(e) => setInput(e.target.value)}
           onKeyDown={onKeyDown}
-          aria-label="Message the booking concierge"
+          aria-label={scout ? "Message the AI venue scout" : "Message the booking concierge"}
           disabled={sending}
         />
         <button type="submit" className="btn btn--primary composer__send" disabled={sending || !input.trim()} aria-label="Send">

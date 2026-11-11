@@ -2415,3 +2415,294 @@ button {
   color: var(--red-ink);
   font-size: 13px;
 }
+
+/* ---- AI venue scout (/find) */
+
+.scout-grid {
+  display: grid;
+  grid-template-columns: minmax(300px, 380px) minmax(0, 1fr);
+  gap: 18px;
+  align-items: start;
+}
+
+.scout-side,
+.scout-main {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  min-width: 0;
+}
+
+.scout-hero .hero__tagline {
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.scout-steps {
+  margin: 16px 0 0;
+  padding: 0;
+  list-style: none;
+  counter-reset: step;
+  display: grid;
+  gap: 8px;
+  font-size: 13px;
+  color: #d4d4d4;
+}
+
+.scout-steps li {
+  counter-increment: step;
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+}
+
+.scout-steps li::before {
+  content: counter(step);
+  flex: none;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  display: inline-grid;
+  place-items: center;
+  font-size: 11px;
+  font-weight: 700;
+  color: #000;
+  background: var(--green);
+}
+
+.scout-steps strong {
+  color: #fff;
+}
+
+.scout-artist .field__input {
+  width: 100%;
+}
+
+.scout-artist .muted {
+  margin-top: 8px;
+}
+
+.scout-note {
+  padding: 0 4px;
+}
+
+.scout-booking__title {
+  font-size: 15px;
+}
+
+.scout-booking__next {
+  margin-top: 10px;
+  font-size: 14px;
+}
+
+.scout-booking__letter {
+  margin-top: 12px;
+  font-size: 13px;
+  color: var(--text-2);
+}
+
+.scout-booking__letter summary {
+  cursor: pointer;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.scout-booking__letter p {
+  margin-top: 8px;
+  white-space: pre-wrap;
+  padding: 10px 12px;
+  border-radius: var(--radius-xs);
+  background: var(--bg);
+}
+
+.scout-callout {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 16px;
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  background: var(--surface);
+  box-shadow: var(--shadow);
+  color: var(--text);
+  text-decoration: none;
+  font-size: 14px;
+}
+
+.scout-callout:hover {
+  border-color: var(--border-strong);
+}
+
+.scout-callout__go {
+  margin-left: auto;
+  font-size: 18px;
+  color: var(--muted);
+}
+
+.chat--scout .chat__list {
+  min-height: 420px;
+}
+
+/* Venue results of the scout's search */
+
+.vhits {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.vhit {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 14px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border);
+  background: var(--surface);
+  min-width: 0;
+}
+
+.vhit__head {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+}
+
+.vhit__rank {
+  flex: none;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  display: inline-grid;
+  place-items: center;
+  font-size: 12px;
+  font-weight: 700;
+  color: #fff;
+  background: var(--ink);
+}
+
+.vhit__title {
+  min-width: 0;
+  flex: 1;
+}
+
+.vhit__name {
+  font-weight: 700;
+  font-size: 15px;
+  color: var(--text);
+  text-decoration: none;
+}
+
+.vhit__name:hover {
+  text-decoration: underline;
+}
+
+.vhit__where {
+  margin-top: 2px;
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 4px;
+  font-size: 12px;
+  color: var(--muted);
+}
+
+.vhit__heat {
+  flex: none;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  line-height: 1;
+  cursor: help;
+}
+
+.vhit__heatnum {
+  font-size: 22px;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+}
+
+.vhit__heatlabel {
+  margin-top: 2px;
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--muted);
+}
+
+.vhit__bar {
+  height: 6px;
+  border-radius: 3px;
+  background: var(--bg);
+  overflow: hidden;
+}
+
+.vhit__bar span {
+  display: block;
+  height: 100%;
+  border-radius: 3px;
+  background: var(--green);
+}
+
+.vhit__signals {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 6px;
+  margin: 0;
+}
+
+.vhit__signals div {
+  min-width: 0;
+}
+
+.vhit__signals dt {
+  font-size: 10px;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.vhit__signals dd {
+  margin: 2px 0 0;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.vhit__signals dd.is-up {
+  color: var(--green-ink);
+}
+
+.vhit__tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  align-items: center;
+}
+
+.vhit__foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  font-size: 13px;
+  color: var(--text-2);
+  margin-top: auto;
+}
+
+@media (max-width: 1080px) {
+  .scout-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media (max-width: 480px) {
+  .vhits {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .chat--scout .chat__list {
+    min-height: 320px;
+  }
+}

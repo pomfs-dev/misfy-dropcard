@@ -11,7 +11,7 @@ use crate::error::{AppError, AppResult};
 use crate::session::DemoSession;
 use crate::AppState;
 
-#[derive(Debug, Serialize, FromRow)]
+#[derive(Debug, Clone, Serialize, FromRow)]
 pub struct Venue {
     pub id: Uuid,
     pub slug: String,
@@ -25,7 +25,7 @@ pub struct Venue {
     pub tz_offset_minutes: i32,
 }
 
-#[derive(Debug, Serialize, FromRow)]
+#[derive(Debug, Clone, Serialize, FromRow)]
 pub struct Space {
     pub id: Uuid,
     pub name: String,
@@ -51,7 +51,7 @@ pub struct Card {
     pub upcoming: Vec<UpcomingShow>,
 }
 
-const VENUE_COLUMNS: &str =
+pub(crate) const VENUE_COLUMNS: &str =
     "id, slug, name, city, country, tagline, description, tags, capacity_band, tz_offset_minutes";
 
 pub async fn venue_by_slug(db: &sqlx::PgPool, slug: &str) -> AppResult<Venue> {

@@ -21,6 +21,7 @@ mod agent;
 mod bookings;
 mod clock;
 mod config;
+mod directory;
 mod error;
 mod jobs;
 mod ledger;
@@ -114,6 +115,8 @@ async fn serve(state: AppState) -> Result<()> {
 async fn seed(state: &AppState) -> Result<()> {
     let db = &state.db;
     sqlx::query("SELECT seed_entities()").execute(db).await?;
+    let listed = directory::load(db).await.context("loading the venue directory")?;
+    tracing::info!(venues = listed, "venue directory loaded");
     let r = &state.cfg.sandbox_receivers;
     if let Some(email) = &r.venue {
         sqlx::query("UPDATE venues SET payout_email = $1").bind(email).execute(db).await?;

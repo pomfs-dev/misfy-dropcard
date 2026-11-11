@@ -1,5 +1,5 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState, type ReactNode } from "react";
-import type { Booking, BookingSummary, ToolCall } from "../api/types";
+import type { Booking, BookingSummary, ToolCall, VenueHit } from "../api/types";
 import { useDemo } from "./demo";
 
 export type UiMessage = {
@@ -9,6 +9,8 @@ export type UiMessage = {
   at: string;
   toolCalls?: ToolCall[];
   proposals?: BookingSummary[];
+  /** the AI venue scout's search results for this reply */
+  venues?: VenueHit[];
   limited?: boolean;
   /** the request for this user message failed */
   error?: string;

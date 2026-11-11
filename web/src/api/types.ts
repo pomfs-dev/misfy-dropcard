@@ -79,6 +79,29 @@ export type ChatTurn = {
   proposals: BookingSummary[];
   booking: Booking | null;
   limited: boolean;
+  /** the AI venue scout's latest venue search this turn (venue cards) */
+  venues: VenueHit[];
+};
+
+/** One venue from the scout's directory search, ranked by activity. */
+export type VenueHit = {
+  slug: string;
+  name: string;
+  city: string;
+  country: string;
+  region: string | null;
+  kind: string | null;
+  genres: string[];
+  /** the bookable room's capacity (made up for the demo) */
+  capacity: number;
+  /** shows MiSFY's discovery data has on record for the venue (rounded) */
+  shows_on_record: number | null;
+  /** 0-100: percentile of shows on record across the directory — a busy calendar, not live popularity */
+  activity: number;
+  quote_from_cents: number;
+  featured: boolean;
+  /** "discovery" = pseudonymized discovery data; "sample" = fictional */
+  data_source: string;
 };
 
 export type Conversation = {
@@ -104,6 +127,10 @@ export type BookingSummary = {
   headcount: number | null;
   genre: string | null;
   created_by: "sample" | "agent" | "owner" | "promoter";
+  venue_slug: string;
+  venue_name: string;
+  /** the venue's UTC offset in minutes */
+  venue_tz: number;
 };
 
 export type ConfirmedBy = "webhook" | "reconciliation" | null;
@@ -117,7 +144,6 @@ export type DepositOrder = {
 };
 
 export type Booking = BookingSummary & {
-  venue_slug: string;
   artist: { slug: string; name: string } | null;
   ticket_price_cents: number | null;
   inquiry_text: string | null;

@@ -11,7 +11,7 @@ import { useVenue } from "../../lib/venue";
 
 const CREATED_BY: Record<string, string> = {
   promoter: "Promoter (booking form)",
-  agent: "AI concierge",
+  agent: "AI venue scout",
   owner: "Venue owner",
   sample: "Sample",
 };

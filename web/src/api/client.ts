@@ -122,8 +122,8 @@ export const api = {
   proposals: (slug: string, body: ProposalRequest) => post<ProposalResult>(`/api/venues/${enc(slug)}/proposals`, body),
   artists: () => get<ArtistItem[]>("/api/artists"),
 
-  // AI booking concierge
-  chat: (body: { venue_slug: string; conversation_id?: string; message: string }) =>
+  // AI agents: the venue scout (no venue_slug; works for `artist`) and a venue's booking concierge
+  chat: (body: { venue_slug?: string; artist?: string; conversation_id?: string; message: string }) =>
     post<ChatTurn>("/api/agent/chat", body),
   conversation: (id: string) => get<Conversation>(`/api/agent/conversations/${enc(id)}`),
 

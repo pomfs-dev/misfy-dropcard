@@ -28,7 +28,7 @@ export function TopBar() {
   return (
     <header className="topbar">
       <div className="topbar__inner">
-        <NavLink to={`/v/${slug}`} className="wordmark" aria-label="MiSFY DropCard home">
+        <NavLink to="/find" className="wordmark" aria-label="MiSFY DropCard home">
           <span className="wordmark__mark" aria-hidden>
             <span className="wordmark__dot" />
           </span>
@@ -38,8 +38,11 @@ export function TopBar() {
         </NavLink>
 
         <nav className="roleswitch" aria-label="Role">
+          <NavLink to="/find" className={({ isActive }) => `roleswitch__item${isActive ? " is-active" : ""}`}>
+            Find a venue
+          </NavLink>
           <NavLink to={`/v/${slug}`} className={({ isActive }) => `roleswitch__item${isActive ? " is-active" : ""}`}>
-            Promoter view
+            Venue card
           </NavLink>
           <NavLink
             to={`/console/${slug}`}

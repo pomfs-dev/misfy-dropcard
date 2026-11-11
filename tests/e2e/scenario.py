@@ -1,5 +1,6 @@
-"""End-to-end scenario: AI concierge -> venue approval -> PayPal deposit (confirmed by webhook) -> tickets ->
-demo clock -> settlement -> PayPal Payouts, plus checks on what the server sent to the Claude API.
+"""End-to-end scenario: AI venue scout (search -> dates -> proposal sent) -> venue approval -> PayPal deposit
+(confirmed by webhook) -> tickets -> demo clock -> settlement -> PayPal Payouts, plus a venue concierge turn and
+checks on what the server sent to the Claude API.
 Runs against a server wired to mock_claude.py and mock_paypal.py (see run.sh). Standard library only.
 Usage: scenario.py <app_url> <mock_paypal_url> <claude_request_log>"""
 import http.cookiejar
@@ -48,8 +49,9 @@ def wait(fn, seconds=20):
     return None
 
 
-def chat(message, conversation_id=None):
-    body = {"venue_slug": VENUE, "message": message}
+def chat(message, conversation_id=None, venue=None):
+    """The AI venue scout (working for Hollow Arcade), or a venue's concierge when `venue` is given."""
+    body = {"venue_slug": venue, "message": message} if venue else {"artist": "hollow-arcade", "message": message}
     if conversation_id:
         body["conversation_id"] = conversation_id
     return call("POST", "/api/agent/chat", body)[1]
@@ -62,20 +64,29 @@ def booking(bid):
 call("GET", "/api/session")
 call("POST", "/api/demo/reset")
 
-# 1. AI concierge
-t1 = chat("A Friday night in the next few weeks for about 300 people, synthwave.")
-check("agent checks availability and proposes slots",
-      [c["name"] for c in t1.get("tool_calls", [])] == ["check_availability", "propose_slots"] and len(t1.get("proposals", [])) >= 1, t1)
+# 1. AI venue scout: search the directory, check dates at the top venue, propose, send the proposal
+t1 = chat("The busiest venues in Tokyo for an electronic show, about 150 people.")
+check("scout searches venues, checks dates at the top one and proposes slots",
+      [c["name"] for c in t1.get("tool_calls", [])] == ["search_venues", "check_availability", "propose_slots"]
+      and len(t1.get("venues", [])) >= 1 and len(t1.get("proposals", [])) >= 1
+      and all(p["venue_slug"] == t1["venues"][0]["slug"] for p in t1["proposals"]), t1)
+check("venues are ranked by activity",
+      [v["activity"] for v in t1.get("venues", [])] == sorted((v["activity"] for v in t1.get("venues", [])), reverse=True), t1.get("venues"))
 conv = t1["conversation_id"]
-t2 = chat("Book the first one please.", conv)
-check("agent sends the booking request (hold)", bool(t2.get("booking")) and t2["booking"]["status"] == "hold", t2)
+t2 = chat("Send the proposal for the first one please.", conv)
+check("scout sends the booking proposal (hold)", bool(t2.get("booking")) and t2["booking"]["status"] == "hold", t2)
 bid = t2["booking"]["id"]
+VENUE = t2["booking"]["venue_slug"]
 t3 = chat("Can I pay the deposit now?", conv)
 check("payment tool is blocked by the server before approval", any(c["status"] == "blocked" for c in t3.get("tool_calls", [])), t3)
+c1 = chat("A Friday night in the next few weeks for about 300 people, synthwave.", venue="blue-lantern")
+check("a venue's concierge still checks availability and proposes slots",
+      [c["name"] for c in c1.get("tool_calls", [])] == ["check_availability", "propose_slots"] and len(c1.get("proposals", [])) >= 1, c1)
 
 # 2. Venue owner approves
 status, b = call("POST", f"/api/console/bookings/{bid}/approve")
 check("venue owner approves", status == 200 and b["status"] == "approved", b)
+deposit_cents = b["deposit_cents"]
 
 # 3. Deposit with PayPal Orders v2
 _, o1 = call("POST", f"/api/bookings/{bid}/deposit-order", headers={"Idempotency-Key": str(uuid.uuid4())})
@@ -120,7 +131,8 @@ check("settling again never pays twice", stats.get("payouts") == 1, stats)
 dash = call("GET", f"/api/console/{VENUE}/dashboard")[1]
 row = next((s for s in dash["shows"] if s["booking_id"] == bid), None)
 out = row and (row["venue_cents"] + row["artist_cents"] + row["promoter_cents"] + row["platform_fee_cents"] + row["paypal_fees_cents"])
-check("every cent is accounted for (payouts + platform fee + PayPal fees = gross)", bool(row) and out == row["gross_cents"] == 78000, row)
+check("every cent is accounted for (payouts + platform fee + PayPal fees = gross)",
+      bool(row) and out == row["gross_cents"] == deposit_cents + 6000, row)
 
 # 6. What the server sent to the Claude API
 requests = [json.loads(line) for line in open(CLAUDE_LOG)]
@@ -128,10 +140,15 @@ bodies = [json.loads(r["raw"]) for r in requests]
 check("Claude API: anthropic-version 2026-10-21 and no sampling parameters",
       all(r["headers"].get("anthropic-version") == "2026-10-21" for r in requests)
       and not any(k in b for b in bodies for k in ("temperature", "top_p", "top_k")))
-check("Claude API: system prompt and tools identical on every request (cacheable prefix)",
-      len({json.dumps(b["system"]) + json.dumps(b["tools"]) for b in bodies}) == 1)
+check("Claude API: system prompt and tools identical on every request of each agent (cacheable prefix)",
+      len({json.dumps(b["system"]) + json.dumps(b["tools"]) for b in bodies}) == len({json.dumps(b["system"]) for b in bodies}) == 2)
+conversations = {}
+for b in bodies:
+    conversations.setdefault(json.dumps(b["messages"][0]), []).append(b)
 check("Claude API: conversation history is append-only",
-      all(b2["messages"][:len(b1["messages"])] == b1["messages"] for b1, b2 in zip(bodies, bodies[1:])))
+      len(conversations) == 2
+      and all(b2["messages"][:len(b1["messages"])] == b1["messages"]
+              for group in conversations.values() for b1, b2 in zip(group, group[1:])))
 
 print()
 print("ALL PASSED" if not FAILED else "FAILED: " + "; ".join(FAILED))

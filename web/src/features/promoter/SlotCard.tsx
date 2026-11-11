@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Link } from "react-router-dom";
 import { errorMessage } from "../../api/client";
 import type { Booking, BookingSummary } from "../../api/types";
 import { IconCheck } from "../../components/icons";
@@ -12,6 +13,7 @@ export function SlotCard({
   city,
   booking,
   onRequest,
+  showVenue = false,
 }: {
   p: BookingSummary;
   tz: number;
@@ -19,6 +21,8 @@ export function SlotCard({
   /** the conversation's booking, once a slot was picked */
   booking: Booking | null;
   onRequest: (p: BookingSummary) => Promise<void>;
+  /** the AI venue scout's cards name the venue and link to its card and owner console */
+  showVenue?: boolean;
 }) {
   const [busy, setBusy] = useState(false);
   const [err, setErr] = useState<string | null>(null);
@@ -28,7 +32,15 @@ export function SlotCard({
   return (
     <article className={`slot${isRequested ? ` slot--picked slot--${picked?.status}` : ""}${otherRequested ? " slot--released" : ""}`}>
       <header className="slot__head">
-        <span className="slot__space">{p.space_name}</span>
+        <span className="slot__space">
+          {showVenue ? (
+            <>
+              <Link to={`/v/${p.venue_slug}`}>{p.venue_name}</Link> · {p.space_name}
+            </>
+          ) : (
+            p.space_name
+          )}
+        </span>
         {isRequested && picked ? (
           <StatusChip status={picked.status} />
         ) : otherRequested ? (
@@ -41,7 +53,7 @@ export function SlotCard({
         <strong>{fmtDateLong(p.starts_at, tz)}</strong>
         <span>
           {fmtTimeRange(p.starts_at, p.ends_at, tz)}
-          {city ? ` · ${city} time` : ""}
+          {city ? ` · ${city} time` : showVenue ? " · venue time" : ""}
         </span>
       </div>
       <p className="slot__money">
@@ -68,6 +80,18 @@ export function SlotCard({
               : picked?.status === "paid"
                 ? "Confirmed — deposit paid."
                 : "Requested."}
+          {showVenue && picked?.status === "hold" && (
+            <>
+              {" "}
+              <Link to={`/console/${p.venue_slug}`}>Approve it as the venue owner</Link>
+            </>
+          )}
+          {showVenue && picked?.status === "approved" && (
+            <>
+              {" "}
+              <Link to={`/v/${p.venue_slug}`}>Pay the deposit on the venue’s card</Link>
+            </>
+          )}
         </p>
       ) : otherRequested ? (
         <p className="slot__released">Released when you picked another slot.</p>

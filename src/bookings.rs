@@ -35,11 +35,16 @@ pub struct BookingSummary {
     pub headcount: Option<i32>,
     pub genre: Option<String>,
     pub created_by: String,
+    pub venue_slug: String,
+    pub venue_name: String,
+    /// The venue's UTC offset in minutes (times are shown in venue time).
+    pub venue_tz: i32,
 }
 
 pub const SUMMARY_SQL: &str = "SELECT b.id, b.title, b.status, b.space_id, s.name AS space_name, b.starts_at, b.ends_at,
-        b.quote_cents, b.deposit_cents, b.headcount, b.genre, b.created_by
-   FROM bookings b JOIN spaces s ON s.id = b.space_id";
+        b.quote_cents, b.deposit_cents, b.headcount, b.genre, b.created_by,
+        v.slug AS venue_slug, v.name AS venue_name, v.tz_offset_minutes AS venue_tz
+   FROM bookings b JOIN spaces s ON s.id = b.space_id JOIN venues v ON v.id = b.venue_id";
 
 #[derive(Debug, Serialize)]
 pub struct ArtistRef {
@@ -68,7 +73,6 @@ pub struct TimelineEntry {
 pub struct Booking {
     #[serde(flatten)]
     pub summary: BookingSummary,
-    pub venue_slug: String,
     pub artist: Option<ArtistRef>,
     pub ticket_price_cents: Option<i64>,
     /// Tickets with a confirmed PayPal capture, and their gross.
@@ -84,7 +88,6 @@ pub struct Booking {
 
 #[derive(Debug, FromRow)]
 struct DetailRow {
-    venue_slug: String,
     artist_slug: Option<String>,
     artist_name: Option<String>,
     ticket_price_cents: Option<i64>,
@@ -128,10 +131,10 @@ pub async fn load(db: &PgPool, session: Uuid, id: Uuid) -> AppResult<Booking> {
     .ok_or(AppError::NotFound)?;
 
     let d = sqlx::query_as::<_, DetailRow>(
-        "SELECT v.slug AS venue_slug, a.slug AS artist_slug, a.name AS artist_name, b.ticket_price_cents,
+        "SELECT a.slug AS artist_slug, a.name AS artist_name, b.ticket_price_cents,
                 b.inquiry_text, b.approved_at, b.conversation_id, b.created_at, b.requested_at, b.paid_at,
                 b.completed_at, b.cancelled_at
-           FROM bookings b JOIN venues v ON v.id = b.venue_id LEFT JOIN artists a ON a.id = b.artist_id
+           FROM bookings b LEFT JOIN artists a ON a.id = b.artist_id
           WHERE b.id = $1",
     )
     .bind(id)
@@ -202,7 +205,6 @@ pub async fn load(db: &PgPool, session: Uuid, id: Uuid) -> AppResult<Booking> {
 
     Ok(Booking {
         summary,
-        venue_slug: d.venue_slug,
         artist: match (d.artist_slug, d.artist_name) {
             (Some(slug), Some(name)) => Some(ArtistRef { slug, name }),
             _ => None,
@@ -222,7 +224,11 @@ pub async fn load(db: &PgPool, session: Uuid, id: Uuid) -> AppResult<Booking> {
 // ------------------------------------------------------------------ availability
 
 pub fn venue_tz(venue: &Venue) -> FixedOffset {
-    FixedOffset::east_opt(venue.tz_offset_minutes * 60).unwrap_or_else(|| FixedOffset::east_opt(0).unwrap())
+    tz_from_minutes(venue.tz_offset_minutes)
+}
+
+pub fn tz_from_minutes(minutes: i32) -> FixedOffset {
+    FixedOffset::east_opt(minutes * 60).unwrap_or_else(|| FixedOffset::east_opt(0).unwrap())
 }
 
 pub fn local_label(at: DateTime<Utc>, tz: FixedOffset) -> String {

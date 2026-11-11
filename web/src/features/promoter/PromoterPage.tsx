@@ -1,6 +1,8 @@
 import { useCallback, useEffect, useRef, useState } from "react";
+import { Link } from "react-router-dom";
 import { api, ApiError } from "../../api/client";
-import type { Booking, BookingSummary, ChatTurn } from "../../api/types";
+import type { Booking, BookingSummary } from "../../api/types";
+import { IconSpark } from "../../components/icons";
 import { Scheduler, SchedulerLegend } from "../../components/Scheduler";
 import { ErrorNote, Loadable, Spinner } from "../../components/ui";
 import { useChatStore } from "../../lib/chatStore";
@@ -10,13 +12,12 @@ import { useApi } from "../../lib/useApi";
 import { useVenue } from "../../lib/venue";
 import { BookingFinder } from "./BookingFinder";
 import { BookingPanel } from "./BookingPanel";
-import { ConciergeChat } from "./ConciergeChat";
 import { VenueDetails, VenueHero } from "./VenueCard";
 
 export function PromoterPage() {
   const { slug, card, tz, city } = useVenue();
   const { epoch, config } = useDemo();
-  // The AI concierge runs only when the server has an AI key; the hosted demo uses the booking form.
+  // The AI lives in the venue scout (/find); a venue's card books with the form, so it works without AI too.
   const aiOn = config?.value?.llm_enabled === true;
   const store = useChatStore();
   const conv = store.get(slug);
@@ -45,14 +46,6 @@ export function PromoterPage() {
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [slug, store.storedBookingId]);
-
-  const onTurn = useCallback(
-    (turn: ChatTurn) => {
-      setHighlight(turn.proposals.map((p) => p.id));
-      schedule.reload();
-    },
-    [schedule],
-  );
 
   const onProposals = useCallback(
     (proposals: BookingSummary[]) => {
@@ -109,25 +102,28 @@ export function PromoterPage() {
       </aside>
 
       <div className="promo-main">
-        {aiOn ? (
-          <ConciergeChat
-            slug={slug}
-            tz={tz}
-            city={city}
-            venueName={c.venue.name}
-            onTurn={onTurn}
-            onBooking={setBooking}
-          />
-        ) : (
-          <BookingFinder
-            slug={slug}
-            tz={tz}
-            city={city}
-            venueName={c.venue.name}
-            onProposals={onProposals}
-            onBooking={setBooking}
-          />
+        {aiOn && (
+          <Link className="scout-callout" to="/find">
+            <span className="chat__badge" aria-hidden>
+              <IconSpark size={15} />
+            </span>
+            <span>
+              <strong>Looking for other venues?</strong> The AI venue scout finds the most active venues, checks their dates
+              and writes your proposal.
+            </span>
+            <span className="scout-callout__go" aria-hidden>
+              →
+            </span>
+          </Link>
         )}
+        <BookingFinder
+          slug={slug}
+          tz={tz}
+          city={city}
+          venueName={c.venue.name}
+          onProposals={onProposals}
+          onBooking={setBooking}
+        />
 
         <section className="card sched-card">
           <header className="card__head">

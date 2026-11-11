@@ -1,0 +1,151 @@
+slug,name,city,country,region,tz_offset_minutes,kind,genres,capacity,shows_on_record,activity,source
+comet-depot-pus,Comet Depot,Busan,KR,East Asia,540,Live house,Rock / Indie|Pop / Hip-hop,450,40,84,sample
+kite-arcade-pus,Kite Arcade,Busan,KR,East Asia,540,Live house,Pop / Hip-hop|Rock / Indie,220,40,84,sample
+cinder-vault-pus,Cinder Vault,Busan,KR,East Asia,540,Live house,Pop / Hip-hop|Rock / Indie,680,35,71,sample
+comet-room-pus,Comet Room,Busan,KR,East Asia,540,Live house,Pop / Hip-hop,720,30,54,sample
+harbor-room,Harbor Room,Busan,KR,East Asia,540,Bar stage,Vocal / Soul|Jazz,250,25,32,sample
+signal-station-pus,Signal Station,Busan,KR,East Asia,540,Bar stage,Rock / Indie|Pop / Hip-hop,1120,25,32,sample
+silver-hall-pus,Silver Hall,Busan,KR,East Asia,540,Live house,Pop / Hip-hop|Rock / Indie,210,25,32,sample
+moth-lounge-pus,Moth Lounge,Busan,KR,East Asia,540,Club,Pop / Hip-hop|Rock / Indie,120,20,13,sample
+tidal-yard-pus,Tidal Yard,Busan,KR,East Asia,540,Club,Rock / Indie,130,15,3,sample
+willow-theater-hkg,Willow Theater,Hong Kong,HK,East Asia,480,Club,Electronic / DJ|Jazz,310,55,99,sample
+halo-hall-hkg,Halo Hall,Hong Kong,HK,East Asia,480,Club,Electronic / DJ,190,50,96,sample
+signal-theater-hkg,Signal Theater,Hong Kong,HK,East Asia,480,Live house,Electronic / DJ,110,50,96,sample
+silver-arcade-hkg,Silver Arcade,Hong Kong,HK,East Asia,480,Hall,Electronic / DJ,410,35,71,sample
+orbit-theater-hkg,Orbit Theater,Hong Kong,HK,East Asia,480,Club,Jazz|Electronic / DJ,1050,30,54,sample
+signal-garage-hkg,Signal Garage,Hong Kong,HK,East Asia,480,Live house,Jazz,290,25,32,sample
+marble-den-hkg,Marble Den,Hong Kong,HK,East Asia,480,Warehouse,Electronic / DJ,330,20,13,sample
+saffron-station-hkg,Saffron Station,Hong Kong,HK,East Asia,480,Live house,Electronic / DJ|Jazz,170,10,1,sample
+halo-garage-osa,Halo Garage,Osaka,JP,East Asia,540,Club,Rock / Indie|Jazz,380,45,91,sample
+pocket-loft-osa,Pocket Loft,Osaka,JP,East Asia,540,Club,Electronic / DJ,430,40,84,sample
+amber-arcade-osa,Amber Arcade,Osaka,JP,East Asia,540,Live house,Electronic / DJ|Rock / Indie,510,35,71,sample
+pocket-parlor-osa,Pocket Parlor,Osaka,JP,East Asia,540,Hall,Electronic / DJ,280,35,71,sample
+silver-annex-osa,Silver Annex,Osaka,JP,East Asia,540,Club,Electronic / DJ|Rock / Indie,630,30,54,sample
+tin-hall-osa,Tin Hall,Osaka,JP,East Asia,540,Live house,Jazz,820,30,54,sample
+hazel-dock-osa,Hazel Dock,Osaka,JP,East Asia,540,Rooftop,Jazz,110,25,32,sample
+kite-hall-osa,Kite Hall,Osaka,JP,East Asia,540,Rooftop,Electronic / DJ|Rock / Indie,230,25,32,sample
+hazel-station-osa,Hazel Station,Osaka,JP,East Asia,540,Bar stage,Electronic / DJ,450,20,13,sample
+blue-lantern,Blue Lantern Hall,Seoul,KR,East Asia,540,Live house,Rock / Indie|Electronic / DJ,500,45,91,sample
+pocket-terrace-sel,Pocket Terrace,Seoul,KR,East Asia,540,Live house,Pop / Hip-hop|Rock / Indie,190,45,91,sample
+copper-lounge-sel,Copper Lounge,Seoul,KR,East Asia,540,Hall,Electronic / DJ,130,30,54,sample
+juniper-works-sel,Juniper Works,Seoul,KR,East Asia,540,Warehouse,Rock / Indie,310,30,54,sample
+lantern-room-sel,Lantern Room,Seoul,KR,East Asia,540,Hall,Rock / Indie|Electronic / DJ,320,30,54,sample
+lantern-theater-sel,Lantern Theater,Seoul,KR,East Asia,540,Club,Pop / Hip-hop,460,30,54,sample
+lumen-loft-sel,Lumen Loft,Seoul,KR,East Asia,540,Live house,Electronic / DJ|Rock / Indie,270,30,54,sample
+neon-theater-sel,Neon Theater,Seoul,KR,East Asia,540,Bar stage,Electronic / DJ,390,25,32,sample
+basalt-yard-sel,Basalt Yard,Seoul,KR,East Asia,540,Club,Pop / Hip-hop,420,20,13,sample
+hazel-yard-tpe,Hazel Yard,Taipei,TW,East Asia,480,Rooftop,Electronic / DJ,820,50,96,sample
+pocket-vault-tpe,Pocket Vault,Taipei,TW,East Asia,480,Club,Electronic / DJ,270,35,71,sample
+copper-terrace-tpe,Copper Terrace,Taipei,TW,East Asia,480,Bar stage,Rock / Indie,510,30,54,sample
+prism-yard-tpe,Prism Yard,Taipei,TW,East Asia,480,Hall,Electronic / DJ|Rock / Indie,290,30,54,sample
+cobalt-loft-tpe,Cobalt Loft,Taipei,TW,East Asia,480,Club,Electronic / DJ,410,25,32,sample
+comet-lounge-tpe,Comet Lounge,Taipei,TW,East Asia,480,Club,Electronic / DJ,510,25,32,sample
+hollow-terrace-tpe,Hollow Terrace,Taipei,TW,East Asia,480,Bar stage,Rock / Indie,760,20,13,sample
+lantern-hall-tpe,Lantern Hall,Taipei,TW,East Asia,480,Rooftop,Electronic / DJ,690,20,13,sample
+rust-lounge-tpe,Rust Lounge,Taipei,TW,East Asia,480,Bar stage,Electronic / DJ|Rock / Indie,220,20,13,sample
+grey-matter,Grey Matter,Tokyo,JP,East Asia,540,Club,Electronic / DJ|Techno / House,300,40,84,sample
+halo-cellar-tyo,Halo Cellar,Tokyo,JP,East Asia,540,Hall,Jazz|Electronic / DJ,880,40,84,sample
+paper-works-tyo,Paper Works,Tokyo,JP,East Asia,540,Live house,Rock / Indie|Electronic / DJ,400,40,84,sample
+basalt-theater-tyo,Basalt Theater,Tokyo,JP,East Asia,540,Live house,Jazz|Electronic / DJ,270,35,71,sample
+static-arcade-tyo,Static Arcade,Tokyo,JP,East Asia,540,Bar stage,Electronic / DJ,540,35,71,sample
+kite-cellar-tyo,Kite Cellar,Tokyo,JP,East Asia,540,Warehouse,Jazz,340,30,54,sample
+paper-hangar-tyo,Paper Hangar,Tokyo,JP,East Asia,540,Warehouse,Jazz,1350,25,32,sample
+willow-depot-tyo,Willow Depot,Tokyo,JP,East Asia,540,Bar stage,Electronic / DJ,110,20,13,sample
+pocket-station-tyo,Pocket Station,Tokyo,JP,East Asia,540,Live house,Electronic / DJ,540,15,3,sample
+cedar-terrace-ber,Cedar Terrace,Berlin,DE,Europe,60,Hall,Techno / House|Electronic / DJ,510,60,100,sample
+indigo-station-ber,Indigo Station,Berlin,DE,Europe,60,Live house,Electronic / DJ|Techno / House,1330,40,84,sample
+basalt-cellar-ber,Basalt Cellar,Berlin,DE,Europe,60,Hall,Electronic / DJ|Techno / House,170,35,71,sample
+hollow-garage-ber,Hollow Garage,Berlin,DE,Europe,60,Club,Techno / House|Electronic / DJ,230,30,54,sample
+static-theater-ber,Static Theater,Berlin,DE,Europe,60,Hall,Techno / House,330,30,54,sample
+prism-depot-ber,Prism Depot,Berlin,DE,Europe,60,Rooftop,Techno / House,1350,25,32,sample
+ivory-arcade-ber,Ivory Arcade,Berlin,DE,Europe,60,Live house,Techno / House,480,20,13,sample
+saffron-yard-ber,Saffron Yard,Berlin,DE,Europe,60,Club,Techno / House,310,20,13,sample
+slate-cellar-ber,Slate Cellar,Berlin,DE,Europe,60,Warehouse,Techno / House,310,20,13,sample
+juniper-hall-lon,Juniper Hall,London,GB,Europe,0,Bar stage,Electronic / DJ,200,40,84,sample
+pocket-lounge-lon,Pocket Lounge,London,GB,Europe,0,Hall,Electronic / DJ,120,40,84,sample
+ivory-works-lon,Ivory Works,London,GB,Europe,0,Bar stage,Electronic / DJ,480,35,71,sample
+slate-garage-lon,Slate Garage,London,GB,Europe,0,Live house,Rock / Indie,220,35,71,sample
+cinder-arcade-lon,Cinder Arcade,London,GB,Europe,0,Club,Electronic / DJ|Rock / Indie,390,30,54,sample
+hazel-depot-lon,Hazel Depot,London,GB,Europe,0,Club,Electronic / DJ,310,25,32,sample
+russet-dock-lon,Russet Dock,London,GB,Europe,0,Live house,Rock / Indie,1270,25,32,sample
+comet-yard-lon,Comet Yard,London,GB,Europe,0,Club,Electronic / DJ|Rock / Indie,210,20,13,sample
+static-room-lon,Static Room,London,GB,Europe,0,Hall,Rock / Indie,1020,20,13,sample
+silver-cellar-lax,Silver Cellar,Los Angeles,US,North America,-480,Club,Electronic / DJ|Pop / Hip-hop,550,45,91,sample
+lantern-foundry-lax,Lantern Foundry,Los Angeles,US,North America,-480,Bar stage,Pop / Hip-hop|Rock / Indie,790,40,84,sample
+ivory-garage-lax,Ivory Garage,Los Angeles,US,North America,-480,Bar stage,Electronic / DJ,290,30,54,sample
+moth-terrace-lax,Moth Terrace,Los Angeles,US,North America,-480,Live house,Rock / Indie,230,30,54,sample
+copper-arcade-lax,Copper Arcade,Los Angeles,US,North America,-480,Warehouse,Rock / Indie,340,25,32,sample
+halo-terrace-lax,Halo Terrace,Los Angeles,US,North America,-480,Live house,Pop / Hip-hop|Rock / Indie,280,25,32,sample
+neon-lounge-lax,Neon Lounge,Los Angeles,US,North America,-480,Live house,Electronic / DJ,120,25,32,sample
+pocket-den-lax,Pocket Den,Los Angeles,US,North America,-480,Club,Rock / Indie,470,20,13,sample
+paper-terrace-nyc,Paper Terrace,New York City,US,North America,-300,Live house,Jazz,170,50,96,sample
+saffron-cellar-nyc,Saffron Cellar,New York City,US,North America,-300,Hall,Rock / Indie,170,35,71,sample
+velvet-room-nyc,Velvet Room,New York City,US,North America,-300,Bar stage,Jazz,670,35,71,sample
+hollow-annex-nyc,Hollow Annex,New York City,US,North America,-300,Club,Pop / Hip-hop,460,30,54,sample
+tidal-den-nyc,Tidal Den,New York City,US,North America,-300,Warehouse,Rock / Indie,200,30,54,sample
+tin-dock-nyc,Tin Dock,New York City,US,North America,-300,Bar stage,Pop / Hip-hop,340,30,54,sample
+marble-terrace-nyc,Marble Terrace,New York City,US,North America,-300,Club,Rock / Indie,610,25,32,sample
+hollow-theater-mel,Hollow Theater,Melbourne,AU,Oceania,660,Hall,Rock / Indie,210,50,96,sample
+indigo-loft-mel,Indigo Loft,Melbourne,AU,Oceania,660,Hall,Vocal / Soul,210,40,84,sample
+saffron-foundry-mel,Saffron Foundry,Melbourne,AU,Oceania,660,Club,Vocal / Soul,730,40,84,sample
+cinder-room-mel,Cinder Room,Melbourne,AU,Oceania,660,Live house,Rock / Indie,180,30,54,sample
+iron-theater-mel,Iron Theater,Melbourne,AU,Oceania,660,Hall,Rock / Indie,120,30,54,sample
+glass-lounge-mel,Glass Lounge,Melbourne,AU,Oceania,660,Club,Rock / Indie,440,25,32,sample
+basalt-parlor-mel,Basalt Parlor,Melbourne,AU,Oceania,660,Club,Vocal / Soul,330,20,13,sample
+kite-vault-mel,Kite Vault,Melbourne,AU,Oceania,660,Rooftop,Vocal / Soul|Rock / Indie,320,20,13,sample
+hollow-cellar-syd,Hollow Cellar,Sydney,AU,Oceania,660,Hall,Electronic / DJ|Rock / Indie,180,50,96,sample
+lumen-theater-syd,Lumen Theater,Sydney,AU,Oceania,660,Club,Electronic / DJ|Rock / Indie,170,50,96,sample
+signal-parlor-syd,Signal Parlor,Sydney,AU,Oceania,660,Live house,Rock / Indie,200,45,91,sample
+glass-foundry-syd,Glass Foundry,Sydney,AU,Oceania,660,Club,Rock / Indie,720,30,54,sample
+moth-room-syd,Moth Room,Sydney,AU,Oceania,660,Live house,Rock / Indie,400,30,54,sample
+tin-yard-syd,Tin Yard,Sydney,AU,Oceania,660,Warehouse,Rock / Indie|Electronic / DJ,130,25,32,sample
+saffron-hangar-syd,Saffron Hangar,Sydney,AU,Oceania,660,Bar stage,Rock / Indie|Electronic / DJ,510,20,13,sample
+tin-station-syd,Tin Station,Sydney,AU,Oceania,660,Club,Rock / Indie,260,20,13,sample
+marble-theater-bkk,Marble Theater,Bangkok,TH,Southeast Asia,420,Rooftop,Electronic / DJ,210,35,71,sample
+orbit-arcade-bkk,Orbit Arcade,Bangkok,TH,Southeast Asia,420,Live house,Electronic / DJ,590,35,71,sample
+cedar-depot-bkk,Cedar Depot,Bangkok,TH,Southeast Asia,420,Club,Rock / Indie,290,25,32,sample
+coral-works-bkk,Coral Works,Bangkok,TH,Southeast Asia,420,Live house,Rock / Indie,320,25,32,sample
+hazel-foundry-bkk,Hazel Foundry,Bangkok,TH,Southeast Asia,420,Live house,Rock / Indie,1070,25,32,sample
+velvet-annex-bkk,Velvet Annex,Bangkok,TH,Southeast Asia,420,Rooftop,Rock / Indie,310,25,32,sample
+cedar-hangar-bkk,Cedar Hangar,Bangkok,TH,Southeast Asia,420,Club,Rock / Indie|Electronic / DJ,110,20,13,sample
+cinder-foundry-bkk,Cinder Foundry,Bangkok,TH,Southeast Asia,420,Live house,Electronic / DJ|Rock / Indie,270,15,3,sample
+rust-loft-bkk,Rust Loft,Bangkok,TH,Southeast Asia,420,Club,Rock / Indie,260,15,3,sample
+cinder-dock-sgn,Cinder Dock,Ho Chi Minh City,VN,Southeast Asia,420,Live house,Pop / Hip-hop,180,50,96,sample
+paper-room-sgn,Paper Room,Ho Chi Minh City,VN,Southeast Asia,420,Warehouse,Pop / Hip-hop|Electronic / DJ,520,40,84,sample
+cinder-yard-sgn,Cinder Yard,Ho Chi Minh City,VN,Southeast Asia,420,Club,Pop / Hip-hop,920,35,71,sample
+velvet-loft-sgn,Velvet Loft,Ho Chi Minh City,VN,Southeast Asia,420,Club,Pop / Hip-hop|Electronic / DJ,170,30,54,sample
+ember-lounge-sgn,Ember Lounge,Ho Chi Minh City,VN,Southeast Asia,420,Bar stage,Pop / Hip-hop|Electronic / DJ,330,25,32,sample
+pocket-hangar-sgn,Pocket Hangar,Ho Chi Minh City,VN,Southeast Asia,420,Live house,Electronic / DJ,450,25,32,sample
+saffron-annex-sgn,Saffron Annex,Ho Chi Minh City,VN,Southeast Asia,420,Bar stage,Pop / Hip-hop,340,20,13,sample
+fog-lounge-sgn,Fog Lounge,Ho Chi Minh City,VN,Southeast Asia,420,Live house,Pop / Hip-hop,270,15,3,sample
+halo-annex-jkt,Halo Annex,Jakarta,ID,Southeast Asia,420,Club,Pop / Hip-hop,410,45,91,sample
+comet-hall-jkt,Comet Hall,Jakarta,ID,Southeast Asia,420,Live house,Pop / Hip-hop,320,35,71,sample
+rust-parlor-jkt,Rust Parlor,Jakarta,ID,Southeast Asia,420,Live house,Rock / Indie,180,35,71,sample
+cinder-garage-jkt,Cinder Garage,Jakarta,ID,Southeast Asia,420,Live house,Rock / Indie,130,30,54,sample
+signal-cellar-jkt,Signal Cellar,Jakarta,ID,Southeast Asia,420,Bar stage,Pop / Hip-hop|Rock / Indie,280,30,54,sample
+velvet-cellar-jkt,Velvet Cellar,Jakarta,ID,Southeast Asia,420,Bar stage,Rock / Indie,450,30,54,sample
+halo-depot-jkt,Halo Depot,Jakarta,ID,Southeast Asia,420,Live house,Pop / Hip-hop|Rock / Indie,610,25,32,sample
+ivory-den-jkt,Ivory Den,Jakarta,ID,Southeast Asia,420,Club,Pop / Hip-hop|Rock / Indie,640,25,32,sample
+signal-terrace-jkt,Signal Terrace,Jakarta,ID,Southeast Asia,420,Bar stage,Rock / Indie,280,20,13,sample
+hollow-arcade-kul,Hollow Arcade,Kuala Lumpur,MY,Southeast Asia,480,Live house,Electronic / DJ,270,40,84,sample
+static-station-kul,Static Station,Kuala Lumpur,MY,Southeast Asia,480,Club,Rock / Indie|Electronic / DJ,300,40,84,sample
+halo-works-kul,Halo Works,Kuala Lumpur,MY,Southeast Asia,480,Warehouse,Electronic / DJ,140,30,54,sample
+static-hall-kul,Static Hall,Kuala Lumpur,MY,Southeast Asia,480,Bar stage,Electronic / DJ,490,30,54,sample
+basalt-lounge-kul,Basalt Lounge,Kuala Lumpur,MY,Southeast Asia,480,Warehouse,Electronic / DJ,1070,25,32,sample
+paper-parlor-kul,Paper Parlor,Kuala Lumpur,MY,Southeast Asia,480,Live house,Electronic / DJ,610,25,32,sample
+orbit-hangar-kul,Orbit Hangar,Kuala Lumpur,MY,Southeast Asia,480,Hall,Rock / Indie|Electronic / DJ,330,20,13,sample
+ivory-hall-kul,Ivory Hall,Kuala Lumpur,MY,Southeast Asia,480,Live house,Electronic / DJ,760,10,1,sample
+indigo-cellar-mnl,Indigo Cellar,Manila,PH,Southeast Asia,480,Live house,Pop / Hip-hop|Vocal / Soul,210,40,84,sample
+iron-lounge-mnl,Iron Lounge,Manila,PH,Southeast Asia,480,Live house,Rock / Indie,260,35,71,sample
+lumen-room-mnl,Lumen Room,Manila,PH,Southeast Asia,480,Warehouse,Pop / Hip-hop,390,35,71,sample
+slate-hangar-mnl,Slate Hangar,Manila,PH,Southeast Asia,480,Warehouse,Pop / Hip-hop,110,35,71,sample
+ember-loft-mnl,Ember Loft,Manila,PH,Southeast Asia,480,Warehouse,Pop / Hip-hop|Rock / Indie,480,25,32,sample
+indigo-room-mnl,Indigo Room,Manila,PH,Southeast Asia,480,Bar stage,Vocal / Soul,600,25,32,sample
+lumen-parlor-mnl,Lumen Parlor,Manila,PH,Southeast Asia,480,Live house,Vocal / Soul,320,10,1,sample
+tidal-annex-sin,Tidal Annex,Singapore,SG,Southeast Asia,480,Rooftop,Jazz|Vocal / Soul,510,45,91,sample
+halo-station-sin,Halo Station,Singapore,SG,Southeast Asia,480,Hall,Vocal / Soul,260,35,71,sample
+ivory-theater-sin,Ivory Theater,Singapore,SG,Southeast Asia,480,Hall,Jazz,1130,30,54,sample
+fog-station-sin,Fog Station,Singapore,SG,Southeast Asia,480,Rooftop,Electronic / DJ|Jazz,630,25,32,sample
+prism-works-sin,Prism Works,Singapore,SG,Southeast Asia,480,Rooftop,Jazz,130,25,32,sample
+cedar-loft-sin,Cedar Loft,Singapore,SG,Southeast Asia,480,Live house,Vocal / Soul,300,20,13,sample
+hazel-terrace-sin,Hazel Terrace,Singapore,SG,Southeast Asia,480,Club,Vocal / Soul,420,20,13,sample

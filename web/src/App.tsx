@@ -3,6 +3,7 @@ import { BrowserRouter, Navigate, Outlet, Route, Routes, useParams } from "react
 import { DEFAULT_SLUG, Footer, TopBar } from "./components/TopBar";
 import { Spinner } from "./components/ui";
 import { PromoterPage } from "./features/promoter/PromoterPage";
+import { ScoutPage } from "./features/scout/ScoutPage";
 import { ChatStoreProvider } from "./lib/chatStore";
 import { DemoProvider } from "./lib/demo";
 import { VenueProvider } from "./lib/venue";
@@ -34,6 +35,19 @@ function VenueLayout() {
   );
 }
 
+/** Pages that are not about one venue (the AI venue scout). */
+function PlainLayout() {
+  return (
+    <div className="app">
+      <TopBar />
+      <main className="main">
+        <Outlet />
+      </main>
+      <Footer />
+    </div>
+  );
+}
+
 function NotFound() {
   return (
     <div className="app">
@@ -42,7 +56,7 @@ function NotFound() {
         <div className="empty">
           <p className="empty__title">Page not found</p>
           <p className="empty__body">
-            <a href={`/v/${DEFAULT_SLUG}`}>Open the Blue Lantern Hall card</a>
+            <a href="/find">Open the AI venue scout</a> or <a href={`/v/${DEFAULT_SLUG}`}>the Blue Lantern Hall card</a>
           </p>
         </div>
       </main>
@@ -57,7 +71,10 @@ export function App() {
       <DemoProvider>
         <ChatStoreProvider>
           <Routes>
-            <Route path="/" element={<Navigate to={`/v/${DEFAULT_SLUG}`} replace />} />
+            <Route path="/" element={<Navigate to="/find" replace />} />
+            <Route element={<PlainLayout />}>
+              <Route path="/find" element={<ScoutPage />} />
+            </Route>
             <Route element={<VenueLayout />}>
               <Route path="/v/:slug" element={<PromoterPage />} />
               <Route path="/console/:slug" element={<ConsolePage />} />
