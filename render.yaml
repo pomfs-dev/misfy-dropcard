@@ -38,8 +38,9 @@ services:
         value: claude-opus-5-5
       - key: LLM_EFFORT
         value: medium
+      # Concierge messages per day across all visitors (cost guard for a public demo; ~$0.05–0.10 each).
       - key: LLM_DAILY_TURN_CAP
-        value: "800"
+        value: "300"
 
   - type: cron
     name: misfy-dropcard-sample-refresh
