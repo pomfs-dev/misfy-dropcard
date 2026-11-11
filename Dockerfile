@@ -15,6 +15,7 @@ COPY Cargo.toml Cargo.lock ./
 RUN mkdir src && echo 'fn main() {}' > src/main.rs && cargo build --release --locked && rm -rf src
 COPY src ./src
 COPY migrations ./migrations
+COPY data ./data
 RUN touch src/main.rs && cargo build --release --locked
 
 # 3) Runtime
