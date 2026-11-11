@@ -248,3 +248,20 @@ export type Dashboard = {
     international_share: number;
   };
 };
+
+// ---- Booking form (no AI)
+export type ArtistItem = { slug: string; name: string; genre: string; country: string };
+
+export type ProposalRequest = {
+  from_date: string;
+  to_date: string;
+  weekdays?: string[];
+  headcount?: number;
+  start_time?: string;
+  hours?: number;
+  title?: string;
+  genre?: string;
+  artist?: string;
+};
+
+export type ProposalResult = { search_id: string; proposals: BookingSummary[]; note: string | null };

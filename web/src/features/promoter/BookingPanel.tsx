@@ -151,7 +151,7 @@ export function BookingPanel({ booking, slug, tz, city, onChange }: Props) {
       />
 
       <div className="booking__step">
-        {status === "ai_proposed" && <p className="muted">Pick “Request this slot” in the chat to send the inquiry.</p>}
+        {status === "ai_proposed" && <p className="muted">Pick “Request this slot” to send the inquiry.</p>}
 
         {status === "hold" && (
           <>

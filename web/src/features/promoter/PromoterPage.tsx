@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { api, ApiError } from "../../api/client";
-import type { Booking, ChatTurn } from "../../api/types";
+import type { Booking, BookingSummary, ChatTurn } from "../../api/types";
 import { Scheduler, SchedulerLegend } from "../../components/Scheduler";
 import { ErrorNote, Loadable, Spinner } from "../../components/ui";
 import { useChatStore } from "../../lib/chatStore";
@@ -8,13 +8,16 @@ import { useDemo } from "../../lib/demo";
 import { venueTimeLabel } from "../../lib/format";
 import { useApi } from "../../lib/useApi";
 import { useVenue } from "../../lib/venue";
+import { BookingFinder } from "./BookingFinder";
 import { BookingPanel } from "./BookingPanel";
 import { ConciergeChat } from "./ConciergeChat";
 import { VenueDetails, VenueHero } from "./VenueCard";
 
 export function PromoterPage() {
   const { slug, card, tz, city } = useVenue();
-  const { epoch } = useDemo();
+  const { epoch, config } = useDemo();
+  // The AI concierge runs only when the server has an AI key; the hosted demo uses the booking form.
+  const aiOn = config?.value?.llm_enabled === true;
   const store = useChatStore();
   const conv = store.get(slug);
   const schedule = useApi(() => api.schedule(slug), [slug, epoch]);
@@ -46,6 +49,14 @@ export function PromoterPage() {
   const onTurn = useCallback(
     (turn: ChatTurn) => {
       setHighlight(turn.proposals.map((p) => p.id));
+      schedule.reload();
+    },
+    [schedule],
+  );
+
+  const onProposals = useCallback(
+    (proposals: BookingSummary[]) => {
+      setHighlight(proposals.map((p) => p.id));
       schedule.reload();
     },
     [schedule],
@@ -98,19 +109,30 @@ export function PromoterPage() {
       </aside>
 
       <div className="promo-main">
-        <ConciergeChat
-          slug={slug}
-          tz={tz}
-          city={city}
-          venueName={c.venue.name}
-          onTurn={onTurn}
-          onBooking={setBooking}
-        />
+        {aiOn ? (
+          <ConciergeChat
+            slug={slug}
+            tz={tz}
+            city={city}
+            venueName={c.venue.name}
+            onTurn={onTurn}
+            onBooking={setBooking}
+          />
+        ) : (
+          <BookingFinder
+            slug={slug}
+            tz={tz}
+            city={city}
+            venueName={c.venue.name}
+            onProposals={onProposals}
+            onBooking={setBooking}
+          />
+        )}
 
         <section className="card sched-card">
           <header className="card__head">
             <h2 className="card__title">
-              Availability <span className="card__title-note">{venueTimeLabel(tz, city)} · AI proposals don’t reserve the date</span>
+              Availability <span className="card__title-note">{venueTimeLabel(tz, city)} · proposals don’t reserve the date</span>
             </h2>
             <SchedulerLegend />
           </header>

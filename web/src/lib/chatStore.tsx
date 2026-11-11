@@ -20,6 +20,8 @@ export type Conversation = {
   conversationId: string | null;
   messages: UiMessage[];
   booking: Booking | null;
+  /** the booking form's latest open slots */
+  proposals: BookingSummary[];
   /** ids of the proposals made in the latest turn (highlighted on the scheduler) */
   freshProposalIds: string[];
   restoredFromServer: boolean;
@@ -29,6 +31,7 @@ const EMPTY: Conversation = {
   conversationId: null,
   messages: [],
   booking: null,
+  proposals: [],
   freshProposalIds: [],
   restoredFromServer: false,
 };

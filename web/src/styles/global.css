@@ -2348,3 +2348,70 @@ button {
     max-width: 94%;
   }
 }
+
+/* Booking form (no AI): dates, nights, crowd and show -> up to three open slots */
+.finder {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+.finder__form {
+  display: grid;
+  gap: 12px;
+}
+.finder__row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 10px;
+}
+.field {
+  display: grid;
+  gap: 5px;
+  min-width: 0;
+}
+.field__label {
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--text-2);
+}
+.field__input {
+  width: 100%;
+  min-width: 0;
+  min-height: 40px;
+  padding: 9px 12px;
+  border-radius: 10px;
+  border: 1px solid var(--border-strong);
+  background: var(--surface);
+  font: inherit;
+  font-size: 14px;
+  color: var(--text);
+  outline: none;
+}
+.field__input:focus {
+  border-color: var(--ink);
+  box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.06);
+}
+.finder__message {
+  resize: vertical;
+  min-height: 60px;
+}
+.finder__nights {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+.finder__night {
+  width: 46px;
+}
+.finder__actions {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+.finder__error {
+  margin: 0;
+  color: var(--red-ink);
+  font-size: 13px;
+}

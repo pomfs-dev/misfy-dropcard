@@ -238,7 +238,7 @@ export function Scheduler({
         ]
           .filter(Boolean)
           .join(" ");
-        const status = ev.status === "ai_proposed" ? "AI proposal" : bookingStatusLabel(ev.status);
+        const status = ev.status === "ai_proposed" ? "Proposal" : bookingStatusLabel(ev.status);
         const time = fmtTimeRange(ev.starts_at, ev.ends_at, tz).replace(/:00/g, "");
         return {
           tag: "div",
@@ -427,7 +427,7 @@ export function SchedulerLegend({ editable = false }: { editable?: boolean }) {
         <i className="legend__swatch legend__swatch--hold" /> On hold
       </span>
       <span className="legend__item">
-        <i className="legend__swatch legend__swatch--ai_proposed" /> AI proposal
+        <i className="legend__swatch legend__swatch--ai_proposed" /> Proposal
       </span>
       <span className="legend__item">
         <i className="legend__swatch legend__swatch--completed" /> Completed

@@ -146,7 +146,7 @@ export function ScheduleTab({ onInboxChange }: { onInboxChange: () => void }) {
           <div>
             <h2 className="card__title">Schedule</h2>
             <p className="card__subtitle">
-              Click a bar for details. Your own AI proposals and holds can be dragged to another day or space.
+              Click a bar for details. Your own proposals and holds can be dragged to another day or space.
             </p>
           </div>
           <SchedulerLegend editable />

@@ -25,10 +25,13 @@ type TabId = (typeof TABS)[number]["id"];
 
 export function ConsolePage() {
   const { slug, card } = useVenue();
-  const { epoch } = useDemo();
+  const { epoch, config } = useDemo();
+  // "Agent activity" only exists when the optional AI concierge is on.
+  const aiOn = config?.value?.llm_enabled === true;
+  const tabs = TABS.filter((t) => t.id !== "agent" || aiOn);
   const [params, setParams] = useSearchParams();
   const raw = params.get("tab");
-  const tab: TabId = (TABS.find((t) => t.id === raw)?.id ?? "schedule") as TabId;
+  const tab: TabId = (tabs.find((t) => t.id === raw)?.id ?? "schedule") as TabId;
 
   // The inbox feeds the tab badge, so it lives here and refreshes in the background.
   const inbox = useApi(() => api.inbox(slug), [slug, epoch]);
@@ -70,7 +73,7 @@ export function ConsolePage() {
       </header>
 
       <nav className="tabs" role="tablist" aria-label="Console sections">
-        {TABS.map((t) => (
+        {tabs.map((t) => (
           <button
             key={t.id}
             ref={tab === t.id ? activeTab : undefined}
@@ -91,7 +94,7 @@ export function ConsolePage() {
         {tab === "inbox" && <InboxTab inbox={inbox} />}
         {tab === "payments" && <PaymentsTab />}
         {tab === "payouts" && <PayoutsTab />}
-        {tab === "agent" && <AgentTab />}
+        {tab === "agent" && aiOn && <AgentTab />}
         {tab === "dashboard" && <DashboardTab />}
       </div>
     </div>

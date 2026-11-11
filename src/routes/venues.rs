@@ -1,10 +1,11 @@
 use axum::extract::{Path, Query, State};
 use axum::{Extension, Json};
-use chrono::{DateTime, Duration, Utc};
+use chrono::{DateTime, Duration, NaiveDate, Utc, Weekday};
 use serde::{Deserialize, Serialize};
 use sqlx::FromRow;
 use uuid::Uuid;
 
+use crate::bookings::{self, BookingSummary, NewProposal, SlotQuery};
 use crate::clock;
 use crate::error::{AppError, AppResult};
 use crate::session::DemoSession;
@@ -102,6 +103,147 @@ pub async fn card(
     .fetch_all(&st.db)
     .await?;
     Ok(Json(Card { venue, spaces, upcoming }))
+}
+
+#[derive(Debug, Serialize, FromRow)]
+pub struct ArtistItem {
+    pub slug: String,
+    pub name: String,
+    pub genre: String,
+    pub country: String,
+}
+
+/// GET /api/artists — the roster, for the booking form's headliner picker.
+pub async fn artists(State(st): State<AppState>) -> AppResult<Json<Vec<ArtistItem>>> {
+    Ok(Json(
+        sqlx::query_as::<_, ArtistItem>("SELECT slug, name, genre, country FROM artists ORDER BY name")
+            .fetch_all(&st.db)
+            .await?,
+    ))
+}
+
+#[derive(Debug, Deserialize)]
+pub struct ProposalRequest {
+    pub from_date: NaiveDate,
+    pub to_date: NaiveDate,
+    /// "Mon".."Sun"; empty means any night.
+    #[serde(default)]
+    pub weekdays: Vec<String>,
+    pub headcount: Option<i32>,
+    /// Doors, venue time, "HH:MM" (default 19:00).
+    pub start_time: Option<String>,
+    pub hours: Option<u32>,
+    pub title: Option<String>,
+    pub genre: Option<String>,
+    /// Artist slug or name from GET /api/artists.
+    pub artist: Option<String>,
+}
+
+#[derive(Debug, Serialize)]
+pub struct ProposalResult {
+    pub search_id: Uuid,
+    pub proposals: Vec<BookingSummary>,
+    pub note: Option<String>,
+}
+
+/// POST /api/venues/{slug}/proposals — the booking form: up to three open slots for the promoter's
+/// dates (the best-fitting free space per date), saved as proposals (dashed bars) that reserve nothing.
+/// A new search replaces this visitor's earlier open proposals at the venue.
+pub async fn propose(
+    State(st): State<AppState>,
+    Extension(DemoSession(sid)): Extension<DemoSession>,
+    Path(slug): Path<String>,
+    Json(req): Json<ProposalRequest>,
+) -> AppResult<Json<ProposalResult>> {
+    let venue = venue_by_slug(&st.db, &slug).await?;
+    let spaces = spaces_of(&st.db, venue.id).await?;
+    if req.to_date < req.from_date {
+        return Err(AppError::BadRequest("the last date is before the first date".into()));
+    }
+    let weekdays = req
+        .weekdays
+        .iter()
+        .map(|w| w.parse::<Weekday>().map_err(|_| AppError::BadRequest(format!("unknown weekday {w:?}"))))
+        .collect::<Result<Vec<_>, _>>()?;
+    let start_hour = match req.start_time.as_deref().map(str::trim).filter(|t| !t.is_empty()) {
+        None => 19,
+        Some(t) => t
+            .split(':')
+            .next()
+            .and_then(|h| h.parse::<u32>().ok())
+            .filter(|h| *h < 24)
+            .ok_or_else(|| AppError::BadRequest(format!("invalid start time {t:?}")))?,
+    };
+    let headcount = req.headcount.filter(|h| *h > 0);
+    if let Some(h) = headcount {
+        if !spaces.iter().any(|s| s.capacity_max >= h) {
+            return Err(AppError::BadRequest(format!("No space at {} holds {h} guests.", venue.name)));
+        }
+    }
+    let title: String = req
+        .title
+        .as_deref()
+        .map(str::trim)
+        .filter(|t| !t.is_empty())
+        .unwrap_or("Live show")
+        .chars()
+        .take(120)
+        .collect();
+    let genre = req.genre.as_deref().map(str::trim).filter(|g| !g.is_empty()).map(|g| g.chars().take(60).collect::<String>());
+    let artist_id: Option<Uuid> = match req.artist.as_deref().map(str::trim).filter(|a| !a.is_empty()) {
+        Some(a) => Some(
+            sqlx::query_scalar("SELECT id FROM artists WHERE slug = lower($1) OR lower(name) = lower($1)")
+                .bind(a)
+                .fetch_optional(&st.db)
+                .await?
+                .ok_or_else(|| AppError::BadRequest(format!("unknown artist {a:?}")))?,
+        ),
+        None => None,
+    };
+    let q = SlotQuery {
+        from: req.from_date,
+        to: req.to_date,
+        headcount,
+        weekdays,
+        start_hour,
+        hours: req.hours.unwrap_or(4).clamp(1, 12),
+        space_name: None,
+        limit: 3,
+    };
+    let slots = bookings::free_slots(&st.db, sid, &venue, &spaces, &q).await?;
+    bookings::clear_open_proposals(&st.db, sid, venue.id).await?;
+    let search_id = Uuid::new_v4();
+    let mut proposals = Vec::new();
+    for slot in &slots {
+        let Some(space) = spaces.iter().find(|s| s.id == slot.space_id) else { continue };
+        let created = bookings::propose(
+            &st.db,
+            sid,
+            NewProposal {
+                conversation_id: search_id,
+                created_by: "promoter",
+                venue: &venue,
+                space,
+                starts_at: slot.starts_at,
+                hours: q.hours,
+                title: title.clone(),
+                headcount,
+                genre: genre.clone(),
+                artist_id,
+                ticket_price_cents: None,
+            },
+        )
+        .await;
+        match created {
+            Ok(b) => proposals.push(b),
+            Err(AppError::Conflict(_)) => continue, // taken a moment ago: skip it
+            Err(e) => return Err(e),
+        }
+    }
+    let note = proposals
+        .is_empty()
+        .then(|| "No open slot matches. Try other dates or nights, another start time or a smaller crowd.".to_string());
+    Ok(Json(ProposalResult { search_id, proposals, note }))
 }
 
 #[derive(Debug, Deserialize)]

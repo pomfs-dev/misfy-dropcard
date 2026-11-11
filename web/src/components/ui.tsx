@@ -8,7 +8,7 @@ import { IconWrench } from "./icons";
 type Tone = "neutral" | "green" | "blue" | "yellow" | "red" | "dashed";
 
 const BOOKING_STATUS: Record<BookingStatus, { label: string; tone: Tone }> = {
-  ai_proposed: { label: "AI proposed", tone: "dashed" },
+  ai_proposed: { label: "Proposed", tone: "dashed" },
   hold: { label: "On hold", tone: "yellow" },
   approved: { label: "Approved", tone: "blue" },
   paid: { label: "Paid", tone: "green" },

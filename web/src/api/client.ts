@@ -1,6 +1,7 @@
 import type {
   AgentRun,
   AppConfig,
+  ArtistItem,
   Booking,
   BookingPatch,
   CaptureResponse,
@@ -11,6 +12,8 @@ import type {
   OrderResponse,
   Payments,
   Payouts,
+  ProposalRequest,
+  ProposalResult,
   Schedule,
   Session,
   Venue,
@@ -115,6 +118,9 @@ export const api = {
   venues: () => get<Venue[]>("/api/venues"),
   card: (slug: string) => get<Card>(`/api/venues/${enc(slug)}`),
   schedule: (slug: string) => get<Schedule>(`/api/venues/${enc(slug)}/schedule`),
+  // Booking form (no AI): up to three open slots for the promoter's dates
+  proposals: (slug: string, body: ProposalRequest) => post<ProposalResult>(`/api/venues/${enc(slug)}/proposals`, body),
+  artists: () => get<ArtistItem[]>("/api/artists"),
 
   // AI booking concierge
   chat: (body: { venue_slug: string; conversation_id?: string; message: string }) =>

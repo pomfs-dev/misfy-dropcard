@@ -32,6 +32,8 @@ pub fn router(state: AppState) -> Router {
         .route("/venues", get(venues::list))
         .route("/venues/{slug}", get(venues::card))
         .route("/venues/{slug}/schedule", get(venues::schedule))
+        .route("/venues/{slug}/proposals", post(venues::propose))
+        .route("/artists", get(venues::artists))
         .route("/agent/chat", post(agent::chat))
         .route("/agent/conversations/{id}", get(agent::conversation))
         .route("/bookings/{id}", get(bookings::get_booking))

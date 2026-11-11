@@ -158,7 +158,11 @@ pub async fn load(db: &PgPool, session: Uuid, id: Uuid) -> AppResult<Booking> {
 
     let mut timeline = vec![TimelineEntry {
         at: d.created_at,
-        label: if summary.created_by == "agent" { "AI proposed this slot".into() } else { "Booking created".into() },
+        label: match summary.created_by.as_str() {
+            "agent" => "AI proposed this slot".into(),
+            "promoter" => "Slot proposed".into(),
+            _ => "Booking created".into(),
+        },
     }];
     if let Some(at) = d.requested_at {
         timeline.push(TimelineEntry { at, label: "Requested by the promoter (inquiry sent)".into() });
@@ -412,7 +416,10 @@ async fn lock_own(tx: &mut Transaction<'_, Postgres>, session: Uuid, id: Uuid) -
 }
 
 pub struct NewProposal<'a> {
+    /// Groups one round of proposals (an agent conversation, or one search of the booking form).
     pub conversation_id: Uuid,
+    /// "promoter" for the booking form, "agent" for the optional AI concierge.
+    pub created_by: &'static str,
     pub venue: &'a Venue,
     pub space: &'a Space,
     pub starts_at: DateTime<Utc>,
@@ -424,7 +431,7 @@ pub struct NewProposal<'a> {
     pub ticket_price_cents: Option<i64>,
 }
 
-/// An AI-proposed slot (dashed bar). It does not reserve the slot, but we only propose free slots.
+/// A proposed slot (dashed bar). It does not reserve the slot, but we only propose free slots.
 pub async fn propose(db: &PgPool, session: Uuid, p: NewProposal<'_>) -> AppResult<BookingSummary> {
     let now = clock::session_now(db, session).await?;
     if p.starts_at <= now {
@@ -445,7 +452,7 @@ pub async fn propose(db: &PgPool, session: Uuid, p: NewProposal<'_>) -> AppResul
         "INSERT INTO bookings (demo_session_id, conversation_id, venue_id, space_id, promoter_id, artist_id, title,
                                genre, headcount, starts_at, ends_at, status, quote_cents, deposit_cents,
                                ticket_price_cents, created_by)
-         VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, 'ai_proposed', $12, $13, $14, 'agent')
+         VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, 'ai_proposed', $12, $13, $14, $15)
          RETURNING id",
     )
     .bind(session)
@@ -462,6 +469,7 @@ pub async fn propose(db: &PgPool, session: Uuid, p: NewProposal<'_>) -> AppResul
     .bind(p.space.day_rate_cents)
     .bind(deposit_for(p.space.day_rate_cents))
     .bind(p.ticket_price_cents.or(Some(DEFAULT_TICKET_CENTS)))
+    .bind(p.created_by)
     .fetch_one(&mut *tx)
     .await?;
     tx.commit().await?;
@@ -481,6 +489,19 @@ pub async fn clear_proposals(db: &PgPool, session: Uuid, conversation_id: Uuid) 
     .rows_affected())
 }
 
+/// Withdraws this session's open proposals at a venue (a new search of the booking form replaces them).
+pub async fn clear_open_proposals(db: &PgPool, session: Uuid, venue_id: Uuid) -> AppResult<u64> {
+    Ok(sqlx::query(
+        "UPDATE bookings SET status = 'cancelled', cancelled_at = now(), updated_at = now()
+          WHERE demo_session_id = $1 AND venue_id = $2 AND status = 'ai_proposed'",
+    )
+    .bind(session)
+    .bind(venue_id)
+    .execute(db)
+    .await?
+    .rows_affected())
+}
+
 /// Proposal -> hold: the promoter requests the slot and the inquiry goes to the venue.
 pub async fn request(db: &PgPool, session: Uuid, id: Uuid, inquiry: Option<&str>) -> AppResult<()> {
     let mut tx = db.begin().await?;
@@ -490,7 +511,7 @@ pub async fn request(db: &PgPool, session: Uuid, id: Uuid, inquiry: Option<&str>
     }
     lock_space(&mut tx, b.space_id).await?;
     if slot_taken(&mut tx, session, b.space_id, b.starts_at, b.ends_at, Some(id)).await? {
-        return Err(AppError::Conflict("this slot was just taken — ask the concierge for another date".into()));
+        return Err(AppError::Conflict("this slot was just taken — pick another date".into()));
     }
     sqlx::query(
         "UPDATE bookings SET status = 'hold', requested_at = now(), updated_at = now(),

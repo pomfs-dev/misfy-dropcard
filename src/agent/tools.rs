@@ -353,6 +353,7 @@ async fn propose_slots(ctx: &mut ToolContext<'_>, input: &Value) -> ToolResult {
             ctx.session,
             NewProposal {
                 conversation_id: ctx.conversation_id,
+                created_by: "agent",
                 venue: ctx.venue,
                 space,
                 starts_at: starts_at.with_timezone(&chrono::Utc),

@@ -9,6 +9,13 @@ import { fmtDateLong, fmtStamp, fmtTimeRange, moneyShort } from "../../lib/forma
 import type { ApiState } from "../../lib/useApi";
 import { useVenue } from "../../lib/venue";
 
+const CREATED_BY: Record<string, string> = {
+  promoter: "Promoter (booking form)",
+  agent: "AI concierge",
+  owner: "Venue owner",
+  sample: "Sample",
+};
+
 /** Approve / Decline for holds; a calm note for approved bookings waiting for the deposit. */
 export function OwnerActions({ booking, onDone }: { booking: Booking; onDone: (b: Booking) => void }) {
   const { bump } = useDemo();
@@ -75,7 +82,7 @@ function InboxCard({ b, tz, city, onDone }: { b: Booking; tz: number; city: stri
           ["Deposit", moneyShort(b.deposit_cents)],
           ["Guests", b.headcount !== null ? String(b.headcount) : "—"],
           ["Genre", b.genre ?? "—"],
-          ["Created by", b.created_by === "agent" ? "AI concierge" : b.created_by],
+          ["Created by", CREATED_BY[b.created_by] ?? b.created_by],
         ]}
       />
       {b.inquiry_text && (
