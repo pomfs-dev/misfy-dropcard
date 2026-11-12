@@ -2,11 +2,12 @@ import type { Card } from "../../api/types";
 import { IconCalendar, IconPin, IconUsers } from "../../components/icons";
 import { SampleBadge } from "../../components/ui";
 import { capacity, countryName, fmtDate, fmtTime, moneyShort } from "../../lib/format";
+import { venuePhoto } from "../../lib/photos";
 
 export function VenueHero({ card }: { card: Card }) {
   const v = card.venue;
   return (
-    <section className="hero" aria-label={v.name}>
+    <section className="hero hero--photo" aria-label={v.name} style={{ backgroundImage: `linear-gradient(180deg, rgba(0,0,0,.25) 0%, rgba(0,0,0,.72) 75%), url(${venuePhoto(v.slug)})` }}>
       <div className="hero__top">
         <span className="hero__eyebrow">Live venue · DropCard</span>
         <SampleBadge />

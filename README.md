@@ -195,4 +195,6 @@ web/               frontend (React, Bryntum Scheduler Pro, AG Grid, PayPal JS SD
 
 ## License
 
-[MIT](LICENSE)
+[MIT](LICENSE) for the code. The MiSFY name and logo (`web/public/brand/`) are trademarks of MiSFY and are not
+covered by the MIT license. The demo photos in `web/public/demo/` are CC0 stock images (sources in
+[`CREDITS.md`](web/public/demo/CREDITS.md)); they do not show the real venues or artists.

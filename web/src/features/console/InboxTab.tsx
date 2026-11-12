@@ -8,6 +8,7 @@ import { useDemo } from "../../lib/demo";
 import { fmtDateLong, fmtStamp, fmtTimeRange, moneyShort } from "../../lib/format";
 import type { ApiState } from "../../lib/useApi";
 import { useVenue } from "../../lib/venue";
+import { artistPhoto } from "../../lib/photos";
 
 const CREATED_BY: Record<string, string> = {
   promoter: "Promoter (booking form)",
@@ -67,7 +68,10 @@ function InboxCard({ b, tz, city, onDone }: { b: Booking; tz: number; city: stri
   return (
     <article className={`inbox-card inbox-card--${b.status}`}>
       <header className="inbox-card__head">
-        <div>
+        {artistPhoto(b.artist?.slug) && (
+          <img className="avatar" src={artistPhoto(b.artist?.slug) ?? ""} alt="" width={44} height={44} />
+        )}
+        <div className="inbox-card__headtext">
           <h3 className="inbox-card__title">{b.title}</h3>
           <p className="inbox-card__when">
             {b.space_name} · {fmtDateLong(b.starts_at, tz)} · {fmtTimeRange(b.starts_at, b.ends_at, tz)}

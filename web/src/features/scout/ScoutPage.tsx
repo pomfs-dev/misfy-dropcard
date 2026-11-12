@@ -7,6 +7,7 @@ import { StatusChip } from "../../components/ui";
 import { useChatStore } from "../../lib/chatStore";
 import { useDemo } from "../../lib/demo";
 import { fmtDateLong, fmtTimeRange, moneyShort } from "../../lib/format";
+import { artistPhoto } from "../../lib/photos";
 import { ConciergeChat, scoutKey } from "../promoter/ConciergeChat";
 import { ACTIVITY_HELP } from "./VenueHitCard";
 
@@ -162,6 +163,7 @@ export function ScoutPage() {
         <section className="card scout-artist">
           <label className="field" htmlFor="scout-artist">
             <span className="field__label">You are</span>
+            {artistPhoto(artist) && <img className="avatar avatar--lg scout-artist__photo" src={artistPhoto(artist) ?? ""} alt="" width={56} height={56} />}
             <select
               id="scout-artist"
               className="field__input"
@@ -187,7 +189,7 @@ export function ScoutPage() {
         <p className="muted small scout-note" title={ACTIVITY_HELP}>
           Activity ranks venues by how many shows MiSFY’s discovery data has on record for them — a busy calendar, not live
           popularity. City, genres and show counts are pseudonymized and rounded; venue names, rooms and prices are made up
-          for the demo.
+          for the demo, and photos are CC0 stock images.
         </p>
       </aside>
 

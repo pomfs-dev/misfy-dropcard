@@ -3,17 +3,19 @@ import type { VenueHit } from "../../api/types";
 import { IconPin } from "../../components/icons";
 import { SampleBadge } from "../../components/ui";
 import { moneyShort } from "../../lib/format";
+import { venuePhoto } from "../../lib/photos";
 
 export const ACTIVITY_HELP =
   "Activity 0–100: how many shows MiSFY’s discovery data has on record for the venue, as a percentile across the directory. It shows a busy calendar, not live popularity.";
 
 export const DISCOVERY_HELP =
-  "City, genres and shows on record come from MiSFY’s discovery data (pseudonymized and rounded). Venue names, rooms and prices are made up for the demo.";
+  "City, genres and shows on record come from MiSFY’s discovery data (pseudonymized and rounded). Venue names, rooms and prices are made up for the demo; photos are CC0 stock images.";
 
 /** One venue from the AI scout's search: where, what, and how active its calendar has been. */
 export function VenueHitCard({ v, rank, onAsk, busy }: { v: VenueHit; rank: number; onAsk?: (v: VenueHit) => void; busy?: boolean }) {
   return (
     <article className="vhit">
+      <div className="vhit__photo" style={{ backgroundImage: `url(${venuePhoto(v.slug)})` }} aria-hidden />
       <header className="vhit__head">
         <span className="vhit__rank" aria-label={`Rank ${rank}`}>
           {rank}

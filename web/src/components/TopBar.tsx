@@ -29,12 +29,8 @@ export function TopBar() {
     <header className="topbar">
       <div className="topbar__inner">
         <NavLink to="/find" className="wordmark" aria-label="MiSFY DropCard home">
-          <span className="wordmark__mark" aria-hidden>
-            <span className="wordmark__dot" />
-          </span>
-          <span className="wordmark__text">
-            <strong>MiSFY</strong> DropCard
-          </span>
+          <img className="wordmark__logo" src="/brand/misfy-logo.png" alt="MiSFY" width={64} height={24} />
+          <span className="wordmark__text">DropCard</span>
         </NavLink>
 
         <nav className="roleswitch" aria-label="Role">

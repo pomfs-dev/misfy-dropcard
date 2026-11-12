@@ -11,6 +11,7 @@ import { InboxTab } from "./InboxTab";
 import { PaymentsTab } from "./PaymentsTab";
 import { PayoutsTab } from "./PayoutsTab";
 import { ScheduleTab } from "./ScheduleTab";
+import { venuePhoto } from "../../lib/photos";
 
 const TABS = [
   { id: "schedule", label: "Schedule" },
@@ -62,6 +63,9 @@ export function ConsolePage() {
   return (
     <div className="console">
       <header className="console__head">
+        {card.data && (
+          <img className="console__photo" src={venuePhoto(card.data.venue.slug)} alt="" width={240} height={135} />
+        )}
         <div>
           <span className="eyebrow">Venue owner console</span>
           <h1 className="console__title">{name ?? <Spinner />}</h1>
