@@ -2785,3 +2785,23 @@ button {
   display: block;
   margin: 6px 0 8px;
 }
+
+.avatar--sm {
+  width: 28px;
+  height: 28px;
+}
+
+.avatar--initial {
+  display: inline-grid;
+  place-items: center;
+  background: var(--ink);
+  color: #fff;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.items__who {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}

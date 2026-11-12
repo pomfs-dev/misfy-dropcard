@@ -7,12 +7,27 @@ import { useDemo } from "../../lib/demo";
 import { fmtDateTime, money, venueTimeLabel } from "../../lib/format";
 import { useApi, usePoll } from "../../lib/useApi";
 import { useVenue } from "../../lib/venue";
+import { artistPhoto, venuePhoto } from "../../lib/photos";
+
+const slugify = (s: string) => s.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
+
+/** Small photo for a payout recipient: the venue's and the artist's demo photo, initials for the promoter. */
+function RecipientPhoto({ role, venueSlug, title }: { role: string; venueSlug: string; title: string }) {
+  const src = role === "venue" ? venuePhoto(venueSlug) : role === "artist" ? artistPhoto(slugify(title.split(" — ")[0] ?? "")) : null;
+  return src ? (
+    <img className="avatar avatar--sm" src={src} alt="" width={28} height={28} />
+  ) : (
+    <span className="avatar avatar--sm avatar--initial" aria-hidden>
+      {role.slice(0, 1).toUpperCase()}
+    </span>
+  );
+}
 
 function inFlight(s: Settlement) {
   return s.status === "planned" || s.status === "submitted" || s.items.some((i) => i.status === "pending" || i.status === "planned");
 }
 
-function Batch({ s, tz }: { s: Settlement; tz: number }) {
+function Batch({ s, tz, venueSlug }: { s: Settlement; tz: number; venueSlug: string }) {
   return (
     <article className={`batch${s.sample ? " batch--sample" : ""}`}>
       <header className="batch__head">
@@ -62,7 +77,12 @@ function Batch({ s, tz }: { s: Settlement; tz: number }) {
           <tbody>
             {s.items.map((it) => (
               <tr key={it.role}>
-                <td className="items__role">{it.role}</td>
+                <td className="items__role">
+                  <span className="items__who">
+                    <RecipientPhoto role={it.role} venueSlug={venueSlug} title={s.booking_title} />
+                    {it.role}
+                  </span>
+                </td>
                 <td className="mono">{it.recipient_email}</td>
                 <td className="num">{money(it.amount_cents)}</td>
                 <td>
@@ -169,7 +189,7 @@ export function PayoutsTab() {
                 ) : (
                   <div className="batches">
                     {own.map((s) => (
-                      <Batch key={s.id} s={s} tz={tz} />
+                      <Batch key={s.id} s={s} tz={tz} venueSlug={slug} />
                     ))}
                   </div>
                 )}
@@ -185,7 +205,7 @@ export function PayoutsTab() {
                   </header>
                   <div className="batches">
                     {shownSample.map((s) => (
-                      <Batch key={s.id} s={s} tz={tz} />
+                      <Batch key={s.id} s={s} tz={tz} venueSlug={slug} />
                     ))}
                   </div>
                   {sample.length > 2 && (
